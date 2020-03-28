@@ -15,6 +15,13 @@
 
 #include <dirent.h>
 #include <stdlib.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <time.h>
+#include <pwd.h>
+#include <grp.h>
 #include "libft/libft.h"
 
 typedef	struct	s_opt
@@ -25,5 +32,17 @@ typedef	struct	s_opt
 	uint16_t	t;
 	uint16_t	r;
 }				t_opt;
+
+typedef struct s_file
+{
+	char			*file_name;
+	unsigned long	mode;
+	long			uid;
+	long			gid;
+	long			link;
+	long long		size;
+	char			*time;
+	struct s_file	*next;
+}				t_file;
 
 #endif
