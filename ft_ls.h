@@ -24,6 +24,8 @@
 #include <grp.h>
 #include "libft/libft.h"
 
+#define MAX(a,b) (a > b) ? a : b
+
 typedef	struct	s_opt
 {
 	uint16_t	l;
@@ -44,5 +46,30 @@ typedef struct s_file
 	char			*time;
 	struct s_file	*next;
 }				t_file;
+
+typedef	struct s_dir
+{
+	char			*name;
+	int				max_uid;
+	int				max_gid;
+	int				max_size;
+	int				max_name;
+	long long		total;
+	struct s_file			*files;
+	struct s_dir			*sub;
+	struct s_dir			*next;
+}				t_dir;
+
+/*
+*
+*	Sorting functions
+*
+*/
+
+void	mergeSort(t_file **h, int (*f)(t_file *a, t_file *b));
+t_file	*sortedMerge(t_file *a, t_file *b, int (*f)(t_file *a, t_file *b));
+void	frontBackSplit(t_file *src, t_file **front, t_file **back);
+int		defSort(t_file *a, t_file *b);
+void	reverse(t_file **lst);
 
 #endif
