@@ -43,7 +43,7 @@ typedef struct s_file
 	long			gid;
 	long			link;
 	long long		size;
-	char			*time;
+	time_t			time;
 	struct s_file	*next;
 }				t_file;
 
@@ -62,14 +62,37 @@ typedef	struct s_dir
 
 /*
 *
+*	Delete later
+*
+*/
+
+#include <stdio.h>
+void	print_opt(t_opt *opt);
+void	dir_prt(t_dir *dir);
+
+
+/*
+*
 *	Sorting functions
 *
 */
 
-void	mergeSort(t_file **h, int (*f)(t_file *a, t_file *b));
-t_file	*sortedMerge(t_file *a, t_file *b, int (*f)(t_file *a, t_file *b));
+void	mergeSort(t_file **h, double (*f)(t_file *a, t_file *b));
+t_file	*sortedMerge(t_file *a, t_file *b, double (*f)(t_file *a, t_file *b));
 void	frontBackSplit(t_file *src, t_file **front, t_file **back);
-int		defSort(t_file *a, t_file *b);
+double		defSort(t_file *a, t_file *b);
+double		timeSort(t_file *a, t_file *b);
 void	reverse(t_file **lst);
+
+
+int		count_max(long long n);
+
+t_file	*new_file(struct dirent *d, t_dir *dir);
+void	file_add(t_file **alst, t_file *new);
+t_dir	*init_dir(DIR *dir, t_opt *opt, char *name);
+void	dir_sub(t_dir *dir, t_dir *new);
+t_dir	*new_dir(char *name);
+
+
 
 #endif

@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-#include <stdio.h>
 
 t_opt	*malloc_opt(void)
 {
@@ -101,15 +100,8 @@ void print_list_l(t_dir *dir)
 		printf("%-*s", dir->max_uid + 1, getpwuid(tmp->uid)->pw_name);
 		printf("%*s ", dir->max_gid + 1, getgrgid(tmp->gid)->gr_name);
 		printf("%*lld ", dir->max_size, tmp->size);
-		printf("%.12s ", tmp->time);
+		printf("%.12s ", ctime(&tmp->time) + 4);
 		printf("%s\n", tmp->file_name);
-	/*	printf("name: %s\n", tmp->file_name);
-		printf("mode: %lo\n", tmp->mode);
-		printf("links: %ld\n", tmp->link);
-		printf("uid: %ld\n", tmp->uid);
-		printf("gid: %ld\n", tmp->gid);
-		printf("size: %lld\n", tmp->size);
-		printf("time: %s\n", (tmp->time));*/
 		tmp = tmp->next;
 	}
 }
@@ -124,171 +116,6 @@ void print_list(t_dir *dir)
 		printf("%-*s",dir->max_name + 1, tmp->file_name);
 		tmp = tmp->next;
 	}
-	printf("\n");
-}
-
-int		count_max(long long n)
-{
-	int i;
-
-	i = 1;
-	while (n > 0)
-	{
-		i++;
-		n = n / 10;
-	}
-	return (i);
-}
-
-void	file_add(t_file **alst, t_file *new)
-{
-	if (new == NULL)
-		return ;
-	new->next = (*alst);
-	(*alst) = new;
-}
-
-void	dir_prt(t_dir *dir)
-{
-	t_dir	*tmp;
-
-	tmp = dir;
-	if (!tmp->sub)
-	{
-		printf("there is no sub!\n");
-	}
-	else
-	{
-		tmp = tmp->sub;
-		while (tmp->next)
-		{
-			printf("%s ", tmp->name);
-			tmp = tmp->next;
-		}
-		printf("\n");
-	}
-}
-
-
-void	dir_sub(t_dir *dir, t_dir *new)
-{
-	t_dir	*tmp;
-
-	tmp = dir;
-	if (new == NULL)
-		return ;
-	if (!tmp->sub)
-	{
-		dir->sub = new;
-	}
-	else
-	{
-		tmp = tmp->sub;
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = new;
-	}
-}
-
-t_dir	*new_dir(char *name)
-{
-	t_dir	*dir;
-	
-	dir = NULL;
-	if (!(dir = ft_memalloc(sizeof(t_dir))))
-	{	
-		perror("malloc");
-		exit(1);
-	}
-	if (!(dir->name = ft_strjoin(name, "/")))
-	{
-		perror("malloc");
-		exit(1);
-	}
-	dir->max_uid = 0;
-	dir->max_gid = 0;
-	dir->max_size = 0;
-	dir->max_name = 0;
-	dir->total = 0;
-	dir->files = NULL;
-	dir->sub = NULL;
-	dir->next = NULL;
-	return (dir);
-}
-
-t_file	*new_file(struct dirent *d, t_dir *dir)
-{
-	t_file	*file;
-	char	*f_name;
-	struct stat sb;
-
-	if (!(f_name = ft_strjoin(dir->name, d->d_name)))
-	{
-		perror("malloc");
-		exit(1);
-	}
-	if (lstat(f_name, &sb) == -1)
-	{
-		perror("lstat");
-		exit(EXIT_FAILURE);
-    }
-	if (!(file = ft_memalloc(sizeof(t_file))))
-	{	
-		perror("malloc");
-		exit(1);
-	}
-	if (!(file->file_name = ft_strdup(d->d_name)))
-	{	
-		perror("malloc");
-		exit(1);
-	}
-	dir->total += (long long)sb.st_blocks;
-	file->mode = (unsigned long)sb.st_mode;
-	if (S_ISDIR(file->mode))
-		dir_sub(dir, new_dir(file->file_name));
-	file->uid = (long)sb.st_uid;
-	file->gid = (long)sb.st_gid;
-	file->link = (long)sb.st_nlink;
-	file->size = (long long)sb.st_size;
-	file->time = ft_strdup(ctime(&sb.st_mtime) + 4);
-	file->next = NULL;
-	dir->max_uid = MAX(dir->max_uid, ft_strlen(getpwuid(file->uid)->pw_name));
-	dir->max_gid = MAX(dir->max_gid, ft_strlen(getgrgid(file->gid)->gr_name));
-	dir->max_name = MAX(dir->max_name, ft_strlen(d->d_name));
-	dir->max_size = MAX(dir->max_size, count_max(file->size));
-	free(f_name);
-	return (file);
-}
-
-t_dir	*init_dir(DIR *dir, t_opt *opt, char *name)
-{
-	struct	dirent *d;
-	t_dir	*direct;
-
-	d = NULL;
-	if (!(direct = new_dir(name)))
-		return (0);
-	while ((d = readdir(dir)) != NULL)
-	{
-		if ((d->d_name[0] != '.' && !opt->a) || opt->a)
-			file_add(&(direct->files), new_file(d, direct));
-	}
-	mergeSort(&(direct->files), &defSort);
-	if (opt->r)
-		reverse(&(direct->files));
-//	print_list(file);
-//	dir_prt(direct);
-	return (direct);
-}
-
-void	print_opt(t_opt *opt)
-{
-	printf("-------OPTIONS--------\n");
-	printf("l is %u\n", opt->l);
-	printf("a is %u\n", opt->a);
-	printf("t is %u\n", opt->t);
-	printf("r is %u\n", opt->r);
-	printf("R is %u\n", opt->R);
 	printf("\n");
 }
 

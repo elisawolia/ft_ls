@@ -12,9 +12,14 @@
 
 #include "ft_ls.h"
 
-int		defSort(t_file *a, t_file *b)
+double		defSort(t_file *a, t_file *b)
 {
 	return (ft_strcmp(a->file_name, b->file_name));
+}
+
+double		timeSort(t_file *a, t_file *b)
+{
+	return (b->time - a->time);
 }
 
 void	reverse(t_file **lst)
@@ -41,7 +46,7 @@ void	reverse(t_file **lst)
 	*lst = prev;
 }
 
-void	mergeSort(t_file **h, int (*f)(t_file *a, t_file *b))
+void	mergeSort(t_file **h, double (*f)(t_file *a, t_file *b))
 {
 	t_file	*head; 
 	t_file	*a;
@@ -58,7 +63,7 @@ void	mergeSort(t_file **h, int (*f)(t_file *a, t_file *b))
 	*h = sortedMerge(a, b, f); 
 }
 
-t_file	*sortedMerge(t_file *a, t_file *b, int (*f)(t_file *a, t_file *b))
+t_file	*sortedMerge(t_file *a, t_file *b, double (*f)(t_file *a, t_file *b))
 {
 	t_file *result; 
 
