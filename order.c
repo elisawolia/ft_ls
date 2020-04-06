@@ -104,4 +104,69 @@ void frontBackSplit(t_file *src, t_file **front, t_file **back)
     *front = src; 
     *back = slow->next; 
     slow->next = NULL; 
+}
+
+double		defSortDir(t_dir *a, t_dir *b)
+{
+	return (ft_strcmp(a->name, b->name));
+}
+
+void	mergeSortDir(t_dir **h, double (*f)(t_dir *a, t_dir *b))
+{
+	t_dir	*head; 
+	t_dir	*a;
+	t_dir	*b; 
+
+	head = *h;
+	a = NULL;
+	b = NULL;
+	if ((head == NULL) || (head->next == NULL))
+		return ;
+	frontBackSplitDir(head, &a, &b); 
+	mergeSortDir(&a, f);
+	mergeSortDir(&b, f);
+	*h = sortedMergeDir(a, b, f); 
+}
+
+t_dir	*sortedMergeDir(t_dir *a, t_dir *b, double (*f)(t_dir *a, t_dir *b))
+{
+	t_dir *result; 
+
+	result = NULL;
+	if (a == NULL) 
+		return (b); 
+	else if (b == NULL)
+		return (a);
+	if ((*f)(a, b) <= 0)
+	{ 
+		result = a;
+		result->next = sortedMergeDir(a->next, b, f); 
+	}
+	else
+	{
+		result = b;
+		result->next = sortedMergeDir(a, b->next, f);
+	}
+	return (result); 
+}
+
+void frontBackSplitDir(t_dir *src, t_dir **front, t_dir **back)
+{
+	t_dir	*fast; 
+	t_dir	*slow; 
+
+	slow = src;
+	fast = src->next;
+	while (fast != NULL)
+	{
+		fast = fast->next;
+		if (fast != NULL)
+		{
+			slow = slow->next;
+			fast = fast->next;
+		}
+	} 
+    *front = src; 
+    *back = slow->next; 
+    slow->next = NULL; 
 } 

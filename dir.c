@@ -58,6 +58,14 @@ void	dir_sub(t_dir *dir, t_dir *new)
 	}
 }
 
+void	dir_next(t_dir **alst, t_dir *new)
+{
+	if (new == NULL)
+		return ;
+	new->next = (*alst);
+	(*alst) = new;
+}
+
 t_dir	*init_dir(DIR *dir, t_opt *opt, char *name)
 {
 	struct	dirent *d;

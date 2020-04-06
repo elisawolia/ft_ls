@@ -144,6 +144,46 @@ void	read_dir(char *dirname, t_opt **opt)
 	}
 }
 
+void	read_mult_dir(char **dirname, int i, int argc, t_opt **opt)
+{
+	t_dir	*direct;
+	t_dir	*tmp;
+	DIR		*dir;
+	int 	j;
+
+	j = i;
+	direct = NULL;
+	tmp = NULL;
+	while (j < argc)
+	{
+		dir = opendir(dirname[j]);	
+		if (!dir)
+			perror("diropen");
+		dir_next(&direct, init_dir(dir, *opt, dirname[j]));
+		j++;
+	}
+	mergeSortDir(&direct, &defSortDir);
+	tmp = direct;
+	
+	while (tmp != NULL)
+	{
+		if (argc != i + 1)
+			printf("%.*s:\n",(int)(ft_strlen(tmp->name) - 1), tmp->name);
+		if ((*opt)->l == 1)
+		{
+			printf("total %lld\n", tmp->total);
+			print_list_l(tmp);
+		}
+		else
+		{
+			print_list(tmp);
+		}
+		if (tmp->next != NULL)
+			ft_putchar('\n');
+		tmp = tmp->next;
+	}
+}
+
 int	main(int argc, char **argv)
 {
 	t_opt	*opt;
@@ -167,7 +207,8 @@ int	main(int argc, char **argv)
 	}
 	else 
 	{
-		while (i < argc)
+		read_mult_dir(argv, i, argc, &opt);
+	/*	while (i < argc)
 		{
 			if (argc - i > 1)
 				printf("%s:\n", argv[i]);
@@ -176,7 +217,7 @@ int	main(int argc, char **argv)
 			i++;
 			if (i < argc)
 				printf("\n");
-		}
+		}*/
 	}
 	free(opt);
 	return (0);
