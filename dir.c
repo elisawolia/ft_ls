@@ -22,7 +22,7 @@ t_dir	*new_dir(char *name)
 		perror("malloc");
 		exit(1);
 	}
-	if (!(dir->name = ft_strjoin(name, "/")))
+	if (!(dir->name = ft_strdup(name)))
 	{
 		perror("malloc");
 		exit(1);
@@ -66,13 +66,17 @@ void	dir_next(t_dir **alst, t_dir *new)
 	(*alst) = new;
 }
 
-t_dir	*init_dir(DIR *dir, t_opt *opt, char *name)
+t_dir	*init_dir(DIR *dir, t_opt *opt, char *name, t_dir *di)
 {
 	struct	dirent *d;
 	t_dir	*direct;
 
 	d = NULL;
-	if (!(direct = new_dir(name)))
+	if (di != NULL)
+	{
+		direct = di;
+	}
+	else if (!(direct = new_dir(name)))
 		return (0);
 	while ((d = readdir(dir)) != NULL)
 	{

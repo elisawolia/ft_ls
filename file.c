@@ -24,9 +24,15 @@ t_file	*new_file(struct dirent *d, t_dir *dir)
 {
 	t_file	*file;
 	char	*f_name;
+	char	*dir_name;
 	struct stat sb;
 
-	if (!(f_name = ft_strjoin(dir->name, d->d_name)))
+	if (!(dir_name = ft_strjoin(dir->name, "/")))
+	{
+		perror("malloc");
+		exit(1);
+	}
+	if (!(f_name = ft_strjoin(dir_name, d->d_name)))
 	{
 		perror("malloc");
 		exit(1);
@@ -49,7 +55,7 @@ t_file	*new_file(struct dirent *d, t_dir *dir)
 	dir->total += (long long)sb.st_blocks;
 	file->mode = (unsigned long)sb.st_mode;
 	if (S_ISDIR(file->mode))
-		dir_sub(dir, new_dir(file->file_name));
+		dir_sub(dir, new_dir(ft_strjoin(dir_name, file->file_name)));
 	file->uid = (long)sb.st_uid;
 	file->gid = (long)sb.st_gid;
 	file->link = (long)sb.st_nlink;

@@ -57,6 +57,36 @@ void	read_opt(char *str, t_opt *opt)
 	}
 }
 
+void	print_r(t_dir *dir, t_opt **opt)
+{
+	if (ft_strcmp(dir->name, "."))
+	{
+		ft_putchar('\n');
+		printf("%s:\n",dir->name);
+	}
+	if ((*opt)->l == 1)
+	{
+		if (dir->total != 0)
+			printf("total %lld\n", dir->total);
+		print_list_l(dir);
+	}
+	else
+	{
+		print_list(dir);
+	}
+	mergeSortDir(&(dir->sub), &defSortDir);
+	mergeSortDir(&(dir->next), &defSortDir);
+	if (dir->sub)
+	{
+		read_dir(dir->sub->name, opt, dir->sub);
+	}
+	if (dir->next)
+	{
+		read_dir(dir->next->name, opt, dir->next);
+	}
+}
+	
+
 void print_list_l(t_dir *dir)
 {
 	t_file *tmp;
@@ -119,7 +149,7 @@ void print_list(t_dir *dir)
 	printf("\n");
 }
 
-void	read_dir(char *dirname, t_opt **opt)
+void	read_dir(char *dirname, t_opt **opt, t_dir *d)
 {
 	t_dir	*direct;
 	DIR		*dir;
@@ -132,8 +162,12 @@ void	read_dir(char *dirname, t_opt **opt)
 		exit(1);
 	};
 //	print_opt(*opt);
-	direct = init_dir(dir, *opt, dirname);
-	if ((*opt)->l == 1)
+	direct = init_dir(dir, *opt, dirname, d);
+	if ((*opt)->R == 1)
+	{
+		print_r(direct, opt);
+	}
+	else if ((*opt)->l == 1)
 	{
 		printf("total %lld\n", direct->total);
 		print_list_l(direct);
@@ -159,7 +193,7 @@ void	read_mult_dir(char **dirname, int i, int argc, t_opt **opt)
 		dir = opendir(dirname[j]);	
 		if (!dir)
 			perror("diropen");
-		dir_next(&direct, init_dir(dir, *opt, dirname[j]));
+		dir_next(&direct, init_dir(dir, *opt, dirname[j], NULL));
 		j++;
 	}
 	mergeSortDir(&direct, &defSortDir);
@@ -168,7 +202,7 @@ void	read_mult_dir(char **dirname, int i, int argc, t_opt **opt)
 	while (tmp != NULL)
 	{
 		if (argc != i + 1)
-			printf("%.*s:\n",(int)(ft_strlen(tmp->name) - 1), tmp->name);
+			printf("%s:\n",tmp->name);
 		if ((*opt)->l == 1)
 		{
 			printf("total %lld\n", tmp->total);
@@ -203,7 +237,7 @@ int	main(int argc, char **argv)
 	}
 	if (i == argc)
 	{
-		read_dir(dirname, &opt);
+		read_dir(dirname, &opt, NULL);
 	}
 	else 
 	{

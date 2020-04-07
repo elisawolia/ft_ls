@@ -18,7 +18,7 @@ void	dir_prt(t_dir *dir)
 	tmp = dir;
 	if (!tmp->sub)
 	{
-		printf("there is no sub!\n");
+		printf("there is no next!\n");
 	}
 	else
 	{

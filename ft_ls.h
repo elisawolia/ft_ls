@@ -90,16 +90,19 @@ t_dir	*sortedMergeDir(t_dir *a, t_dir *b, double (*f)(t_dir *a, t_dir *b));
 void frontBackSplitDir(t_dir *src, t_dir **front, t_dir **back);
 
 
+void	read_dir(char *dirname, t_opt **opt, t_dir *d);
+
 
 int		count_max(long long n);
 
 t_file	*new_file(struct dirent *d, t_dir *dir);
 void	file_add(t_file **alst, t_file *new);
-t_dir	*init_dir(DIR *dir, t_opt *opt, char *name);
+t_dir	*init_dir(DIR *dir, t_opt *opt, char *name, t_dir *di);
 void	dir_sub(t_dir *dir, t_dir *new);
 void	dir_next(t_dir **alst, t_dir *new);
 t_dir	*new_dir(char *name);
 
-
+void print_list(t_dir *dir);
+void print_list_l(t_dir *dir);
 
 #endif
