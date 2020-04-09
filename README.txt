@@ -1,6 +1,6 @@
 Tasks left to do:
 + initiallization in the beginning. Using several args, it firstly order dirs 
-- R flag
++ R flag
 - no flag correct output
 - Makefile
 - free memory

@@ -58,6 +58,8 @@ typedef	struct s_dir
 	struct s_file			*files;
 	struct s_dir			*sub;
 	struct s_dir			*next;
+	struct s_dir			*mult;
+	
 }				t_dir;
 
 /*
@@ -85,15 +87,16 @@ double		timeSort(t_file *a, t_file *b);
 void	reverse(t_file **lst);
 
 double		defSortDir(t_dir *a, t_dir *b);
-void	mergeSortDir(t_dir **h, double (*f)(t_dir *a, t_dir *b));
-t_dir	*sortedMergeDir(t_dir *a, t_dir *b, double (*f)(t_dir *a, t_dir *b));
-void frontBackSplitDir(t_dir *src, t_dir **front, t_dir **back);
+void	mergeSortDir(t_dir **h, double (*f)(t_dir *a, t_dir *b), int flag);
+t_dir	*sortedMergeDir(t_dir *a, t_dir *b, double (*f)(t_dir *a, t_dir *b), int flag);
+void frontBackSplitDir(t_dir *src, t_dir **front, t_dir **back, int flag);
 
 
 void	read_dir(char *dirname, t_opt **opt, t_dir *d);
 
 
 int		count_max(long long n);
+int		ft_findedot(char *name);
 
 t_file	*new_file(struct dirent *d, t_dir *dir);
 void	file_add(t_file **alst, t_file *new);
@@ -104,5 +107,8 @@ t_dir	*new_dir(char *name);
 
 void print_list(t_dir *dir);
 void print_list_l(t_dir *dir);
+
+void	free_files(t_file **list);
+void	free_dir(t_dir **dir);
 
 #endif

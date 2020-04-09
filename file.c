@@ -20,6 +20,14 @@ void	file_add(t_file **alst, t_file *new)
 	(*alst) = new;
 }
 
+void	free_files(t_file **list)
+{
+	free((*list)->file_name);
+	if ((*list)->next)
+		free_files(&((*list)->next));
+	free(*list);
+}
+
 t_file	*new_file(struct dirent *d, t_dir *dir)
 {
 	t_file	*file;
@@ -54,8 +62,10 @@ t_file	*new_file(struct dirent *d, t_dir *dir)
 	}
 	dir->total += (long long)sb.st_blocks;
 	file->mode = (unsigned long)sb.st_mode;
-	if (S_ISDIR(file->mode))
+	if (S_ISDIR(file->mode) && ft_findedot(f_name))
+	{
 		dir_sub(dir, new_dir(ft_strjoin(dir_name, file->file_name)));
+	}
 	file->uid = (long)sb.st_uid;
 	file->gid = (long)sb.st_gid;
 	file->link = (long)sb.st_nlink;
@@ -66,6 +76,6 @@ t_file	*new_file(struct dirent *d, t_dir *dir)
 	dir->max_gid = MAX(dir->max_gid, (int)ft_strlen(getgrgid(file->gid)->gr_name));
 	dir->max_name = MAX(dir->max_name, (int)ft_strlen(d->d_name));
 	dir->max_size = MAX(dir->max_size, count_max(file->size));
-	free(f_name);
+//	free(f_name);
 	return (file);
 }

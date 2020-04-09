@@ -35,6 +35,8 @@ t_dir	*new_dir(char *name)
 	dir->files = NULL;
 	dir->sub = NULL;
 	dir->next = NULL;
+	dir->mult = NULL;
+	
 	return (dir);
 }
 
@@ -62,8 +64,21 @@ void	dir_next(t_dir **alst, t_dir *new)
 {
 	if (new == NULL)
 		return ;
-	new->next = (*alst);
+	new->mult = (*alst);
 	(*alst) = new;
+}
+
+void	free_dir(t_dir **dir)
+{
+	free((*dir)->name);
+	free_files(&((*dir)->files));
+	if ((*dir)->sub)
+		free_dir(&((*dir)->sub));
+	if ((*dir)->next)
+		free_dir(&((*dir)->next));
+	if ((*dir)->mult)
+		free_dir(&((*dir)->sub));
+	free(*dir);
 }
 
 t_dir	*init_dir(DIR *dir, t_opt *opt, char *name, t_dir *di)
@@ -88,7 +103,7 @@ t_dir	*init_dir(DIR *dir, t_opt *opt, char *name, t_dir *di)
 		mergeSort(&(direct->files), &timeSort);
 	if (opt->r)
 		reverse(&(direct->files));
-//	print_list(file);
-//	dir_prt(direct);
+//	free(d);
+//	free(direct);
 	return (direct);
 }

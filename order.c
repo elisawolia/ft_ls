@@ -111,7 +111,7 @@ double		defSortDir(t_dir *a, t_dir *b)
 	return (ft_strcmp(a->name, b->name));
 }
 
-void	mergeSortDir(t_dir **h, double (*f)(t_dir *a, t_dir *b))
+void	mergeSortDir(t_dir **h, double (*f)(t_dir *a, t_dir *b), int flag)
 {
 	t_dir	*head; 
 	t_dir	*a;
@@ -120,15 +120,15 @@ void	mergeSortDir(t_dir **h, double (*f)(t_dir *a, t_dir *b))
 	head = *h;
 	a = NULL;
 	b = NULL;
-	if ((head == NULL) || (head->next == NULL))
+	if ((head == NULL) || (flag && head->next == NULL) || (!flag && head->mult == NULL))
 		return ;
-	frontBackSplitDir(head, &a, &b); 
-	mergeSortDir(&a, f);
-	mergeSortDir(&b, f);
-	*h = sortedMergeDir(a, b, f); 
+	frontBackSplitDir(head, &a, &b, flag); 
+	mergeSortDir(&a, f, flag);
+	mergeSortDir(&b, f, flag);
+	*h = sortedMergeDir(a, b, f, flag); 
 }
 
-t_dir	*sortedMergeDir(t_dir *a, t_dir *b, double (*f)(t_dir *a, t_dir *b))
+t_dir	*sortedMergeDir(t_dir *a, t_dir *b, double (*f)(t_dir *a, t_dir *b), int flag)
 {
 	t_dir *result; 
 
@@ -140,33 +140,63 @@ t_dir	*sortedMergeDir(t_dir *a, t_dir *b, double (*f)(t_dir *a, t_dir *b))
 	if ((*f)(a, b) <= 0)
 	{ 
 		result = a;
-		result->next = sortedMergeDir(a->next, b, f); 
+		if (flag)
+			result->next = sortedMergeDir(a->next, b, f, flag);
+		else
+			result->mult = sortedMergeDir(a->mult, b, f, flag);
 	}
 	else
 	{
 		result = b;
-		result->next = sortedMergeDir(a, b->next, f);
+		if (flag)
+			result->next = sortedMergeDir(a, b->next, f, flag);
+		else
+			result->mult = sortedMergeDir(a, b->mult, f, flag);
 	}
 	return (result); 
 }
 
-void frontBackSplitDir(t_dir *src, t_dir **front, t_dir **back)
+void frontBackSplitDir(t_dir *src, t_dir **front, t_dir **back, int flag)
 {
 	t_dir	*fast; 
 	t_dir	*slow; 
 
 	slow = src;
-	fast = src->next;
+	fast = NULL;
+	if (flag)
+		fast = src->next;
+	else
+		fast = src->mult;
 	while (fast != NULL)
 	{
-		fast = fast->next;
-		if (fast != NULL)
+		if (flag)
 		{
-			slow = slow->next;
 			fast = fast->next;
+			if (fast != NULL)
+			{
+				slow = slow->next;
+				fast = fast->next;
+			}
+		}
+		else
+		{
+			fast = fast->mult;
+			if (fast != NULL)
+			{
+				slow = slow->mult;
+				fast = fast->mult;
+			}
 		}
 	} 
-    *front = src; 
-    *back = slow->next; 
-    slow->next = NULL; 
+    *front = src;
+    if (flag)
+    {
+    	*back = slow->next; 
+    	slow->next = NULL;
+    }
+    else
+    {
+    	*back = slow->mult; 
+    	slow->mult = NULL;
+    } 
 } 

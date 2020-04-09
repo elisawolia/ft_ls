@@ -24,3 +24,13 @@ int		count_max(long long n)
 	}
 	return (i);
 }
+
+int		ft_findedot(char *name)
+{
+	int i;
+
+	i = ft_strlen(name);
+	if (name[i - 1] == '.' && (name[i - 2] == '/' || (name[i - 2] == '.' && name[i - 3] == '/')))
+		return (0);
+	return (1);
+}
