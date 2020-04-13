@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+#include <sys/ioctl.h>
 
 t_opt	*malloc_opt(void)
 {
@@ -136,17 +137,77 @@ void print_list_l(t_dir *dir)
 	}
 }
 
+int 	rows_print(t_dir *dir)
+{
+	int 	i;
+	int 	cols;
+	int 	files;
+	int 	res;
+	struct  winsize w;
+
+	i = 0;
+	res = 1;
+	files = count_files(dir->files);
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+	printf("DEF COLS ARE %hu\n", w.ws_col);
+	printf("DEF ROWS ARE %hu\n", w.ws_row);
+	cols = w.ws_col / (dir->max_name + 1);
+	printf("ONE COLS ARE %d\n", cols);
+    if (!cols)
+      cols = 1;
+    if ((dir->max_name + 1) * files < w.ws_col)
+      cols = files;
+    res = files / cols;
+    if (files % cols)
+      ++res;
+	return (cols);
+}
+
 void print_list(t_dir *dir)
 {
+	int 	rows;
+	int 	i;
+	int 	j;
 	t_file *tmp;
-
+	
 	tmp = dir->files;
-	while(tmp != NULL)
+	rows = rows_print(dir);
+	i = 0;
+	j = 0;
+	printf("!!! rows = %d\n", rows);
+
+	while (i < rows)
 	{
-		printf("%-*s",dir->max_name + 1, tmp->file_name);
+		j = 0;
+		tmp = dir->files;
+		while(tmp != NULL)
+		{
+			if (j % rows == i)
+				printf("%-*s\t",dir->max_name ,tmp->file_name);
+			j++;
+			tmp = tmp->next;
+		}
+		printf("\n");
+		i++;
+	}
+/*	while(tmp != NULL)
+	{
+		if (i % 2 == 0)
+			printf("%s\t",tmp->file_name);
+		i++;
 		tmp = tmp->next;
 	}
 	printf("\n");
+	i = 0;
+	tmp = dir->files;
+	while(tmp != NULL)
+	{
+		if (i % 2 == 1)
+			printf("%s\t",tmp->file_name);
+		i++;
+		tmp = tmp->next;
+	}
+	printf("\n");*/
 }
 
 void	read_dir(char *dirname, t_opt **opt, t_dir *d)

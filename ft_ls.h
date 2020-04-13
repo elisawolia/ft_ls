@@ -97,6 +97,7 @@ void	read_dir(char *dirname, t_opt **opt, t_dir *d);
 
 int		count_max(long long n);
 int		ft_findedot(char *name);
+int		count_files(t_file *file);
 
 t_file	*new_file(struct dirent *d, t_dir *dir);
 void	file_add(t_file **alst, t_file *new);

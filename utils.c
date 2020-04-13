@@ -34,3 +34,18 @@ int		ft_findedot(char *name)
 		return (0);
 	return (1);
 }
+
+int		count_files(t_file *file)
+{
+	int i;
+	t_file *tmp;
+
+	i = 0;
+	tmp = file;
+	while (tmp != NULL)
+	{
+		tmp = tmp->next;
+		i++;
+	}
+	return (i);
+}
