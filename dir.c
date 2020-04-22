@@ -12,13 +12,13 @@
 
 #include "ft_ls.h"
 
-t_dir	*new_dir(char *name)
+t_dir	*new_dir(char *name, time_t time)
 {
 	t_dir	*dir;
-	
+
 	dir = NULL;
 	if (!(dir = ft_memalloc(sizeof(t_dir))))
-	{	
+	{
 		perror("malloc");
 		exit(1);
 	}
@@ -33,10 +33,10 @@ t_dir	*new_dir(char *name)
 	dir->max_name = 0;
 	dir->total = 0;
 	dir->files = NULL;
+	dir->time = time;
 	dir->sub = NULL;
 	dir->next = NULL;
 	dir->mult = NULL;
-	
 	return (dir);
 }
 
@@ -72,6 +72,8 @@ void	free_dir(t_dir **dir)
 {
 	free((*dir)->name);
 	free_files(&((*dir)->files));
+//	if ((*dir)->time)
+//		free(time);
 	if ((*dir)->sub)
 		free_dir(&((*dir)->sub));
 	if ((*dir)->next)
@@ -83,27 +85,25 @@ void	free_dir(t_dir **dir)
 
 t_dir	*init_dir(DIR *dir, t_opt *opt, char *name, t_dir *di)
 {
-	struct	dirent *d;
-	t_dir	*direct;
+	struct dirent	*d;
+	t_dir			*direct;
 
 	d = NULL;
 	if (di != NULL)
 	{
 		direct = di;
 	}
-	else if (!(direct = new_dir(name)))
+	else if (!(direct = new_dir(name, 0)))
 		return (0);
 	while ((d = readdir(dir)) != NULL)
 	{
 		if ((d->d_name[0] != '.' && !opt->a) || opt->a)
 			file_add(&(direct->files), new_file(d, direct));
 	}
-	mergeSort(&(direct->files), &defSort);
+	merge_sort(&(direct->files), &def_sort);
 	if (opt->t)
-		mergeSort(&(direct->files), &timeSort);
+		merge_sort(&(direct->files), &time_sort);
 	if (opt->r)
 		reverse(&(direct->files));
-//	free(d);
-//	free(direct);
 	return (direct);
 }

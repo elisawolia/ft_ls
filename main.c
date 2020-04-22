@@ -75,8 +75,20 @@ void	print_r(t_dir *dir, t_opt **opt)
 	{
 		print_list(dir);
 	}
-	mergeSortDir(&(dir->sub), &defSortDir, 1);
-	mergeSortDir(&(dir->next), &defSortDir, 1);
+	merge_sort_dir(&(dir->sub), &def_sort_dir, 1);
+	merge_sort_dir(&(dir->next), &def_sort_dir, 1);
+	if ((*opt)->t)
+	{
+		merge_sort_dir(&(dir->sub), &time_sort_dir, 1);
+		merge_sort_dir(&(dir->next), &time_sort_dir, 1);
+	}
+	if ((*opt)->r)
+	{
+		reverse_dir_next(&(dir->sub));
+		reverse_dir_next(&(dir->next));
+		reverse_dir_sub(&(dir->sub));
+		reverse_dir_sub(&(dir->next));
+	}
 	if (dir->sub)
 	{
 		read_dir(dir->sub->name, opt, dir->sub);
@@ -85,6 +97,7 @@ void	print_r(t_dir *dir, t_opt **opt)
 	{
 		read_dir(dir->next->name, opt, dir->next);
 	}
+
 }
 	
 
@@ -148,7 +161,7 @@ int 	rows_print(t_dir *dir)
 	files_count = count_files(dir->files);
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 	col_width = (dir->max_name + 8) & ~7; // col_width = ближайшей число кратное 8 (по табу)
-	numcols = w.ws_col / col_width;
+	numcols = (w.ws_col / col_width > 0) ? w.ws_col / col_width : 1;
 	numrows = files_count / numcols;
 	if (files_count % numcols)
 		++numrows;
@@ -232,7 +245,7 @@ void	read_mult_dir(char **dirname, int i, int argc, t_opt **opt)
 		dir_next(&direct, init_dir(dir, *opt, dirname[j], NULL));
 		j++;
 	}
-	mergeSortDir(&direct, &defSortDir, 0);
+	merge_sort_dir(&direct, &def_sort_dir, 0);
 	tmp = direct;
 	while (tmp != NULL)
 	{
@@ -282,6 +295,9 @@ int	main(int argc, char **argv)
 	{
 		read_mult_dir(argv, i, argc, &opt);
 	}
-	//free(opt);
+	free(opt);
+	int t = 0;
+	while (1)
+		t++;
 	return (0);
 }

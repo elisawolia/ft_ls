@@ -12,12 +12,12 @@
 
 #include "ft_ls.h"
 
-double		defSort(t_file *a, t_file *b)
+double		def_sort(t_file *a, t_file *b)
 {
 	return (ft_strcmp(a->file_name, b->file_name));
 }
 
-double		timeSort(t_file *a, t_file *b)
+double		time_sort(t_file *a, t_file *b)
 {
 	return (b->time - a->time);
 }
@@ -46,7 +46,7 @@ void	reverse(t_file **lst)
 	*lst = prev;
 }
 
-void	mergeSort(t_file **h, double (*f)(t_file *a, t_file *b))
+void	merge_sort(t_file **h, double (*f)(t_file *a, t_file *b))
 {
 	t_file	*head; 
 	t_file	*a;
@@ -57,13 +57,13 @@ void	mergeSort(t_file **h, double (*f)(t_file *a, t_file *b))
 	b = NULL;
 	if ((head == NULL) || (head->next == NULL))
 		return ;
-	frontBackSplit(head, &a, &b); 
-	mergeSort(&a, f);
-	mergeSort(&b, f);
-	*h = sortedMerge(a, b, f); 
+	front_back_split(head, &a, &b); 
+	merge_sort(&a, f);
+	merge_sort(&b, f);
+	*h = sorted_merge(a, b, f); 
 }
 
-t_file	*sortedMerge(t_file *a, t_file *b, double (*f)(t_file *a, t_file *b))
+t_file	*sorted_merge(t_file *a, t_file *b, double (*f)(t_file *a, t_file *b))
 {
 	t_file *result; 
 
@@ -75,17 +75,17 @@ t_file	*sortedMerge(t_file *a, t_file *b, double (*f)(t_file *a, t_file *b))
 	if ((*f)(a, b) <= 0)
 	{ 
 		result = a;
-		result->next = sortedMerge(a->next, b, f); 
+		result->next = sorted_merge(a->next, b, f); 
 	}
 	else
 	{
 		result = b;
-		result->next = sortedMerge(a, b->next, f);
+		result->next = sorted_merge(a, b->next, f);
 	}
 	return (result); 
 }
 
-void frontBackSplit(t_file *src, t_file **front, t_file **back)
+void front_back_split(t_file *src, t_file **front, t_file **back)
 {
 	t_file	*fast; 
 	t_file	*slow; 
@@ -106,12 +106,17 @@ void frontBackSplit(t_file *src, t_file **front, t_file **back)
     slow->next = NULL; 
 }
 
-double		defSortDir(t_dir *a, t_dir *b)
+double		def_sort_dir(t_dir *a, t_dir *b)
 {
 	return (ft_strcmp(a->name, b->name));
 }
 
-void	mergeSortDir(t_dir **h, double (*f)(t_dir *a, t_dir *b), int flag)
+double		time_sort_dir(t_dir *a, t_dir *b)
+{
+	return (b->time - a->time);
+}
+
+void	merge_sort_dir(t_dir **h, double (*f)(t_dir *a, t_dir *b), int flag)
 {
 	t_dir	*head; 
 	t_dir	*a;
@@ -122,13 +127,13 @@ void	mergeSortDir(t_dir **h, double (*f)(t_dir *a, t_dir *b), int flag)
 	b = NULL;
 	if ((head == NULL) || (flag && head->next == NULL) || (!flag && head->mult == NULL))
 		return ;
-	frontBackSplitDir(head, &a, &b, flag); 
-	mergeSortDir(&a, f, flag);
-	mergeSortDir(&b, f, flag);
-	*h = sortedMergeDir(a, b, f, flag); 
+	front_back_split_dir(head, &a, &b, flag); 
+	merge_sort_dir(&a, f, flag);
+	merge_sort_dir(&b, f, flag);
+	*h = sorted_merge_dir(a, b, f, flag); 
 }
 
-t_dir	*sortedMergeDir(t_dir *a, t_dir *b, double (*f)(t_dir *a, t_dir *b), int flag)
+t_dir	*sorted_merge_dir(t_dir *a, t_dir *b, double (*f)(t_dir *a, t_dir *b), int flag)
 {
 	t_dir *result; 
 
@@ -141,22 +146,22 @@ t_dir	*sortedMergeDir(t_dir *a, t_dir *b, double (*f)(t_dir *a, t_dir *b), int f
 	{ 
 		result = a;
 		if (flag)
-			result->next = sortedMergeDir(a->next, b, f, flag);
+			result->next = sorted_merge_dir(a->next, b, f, flag);
 		else
-			result->mult = sortedMergeDir(a->mult, b, f, flag);
+			result->mult = sorted_merge_dir(a->mult, b, f, flag);
 	}
 	else
 	{
 		result = b;
 		if (flag)
-			result->next = sortedMergeDir(a, b->next, f, flag);
+			result->next = sorted_merge_dir(a, b->next, f, flag);
 		else
-			result->mult = sortedMergeDir(a, b->mult, f, flag);
+			result->mult = sorted_merge_dir(a, b->mult, f, flag);
 	}
 	return (result); 
 }
 
-void frontBackSplitDir(t_dir *src, t_dir **front, t_dir **back, int flag)
+void front_back_split_dir(t_dir *src, t_dir **front, t_dir **back, int flag)
 {
 	t_dir	*fast; 
 	t_dir	*slow; 
@@ -199,4 +204,52 @@ void frontBackSplitDir(t_dir *src, t_dir **front, t_dir **back, int flag)
     	*back = slow->mult; 
     	slow->mult = NULL;
     } 
-} 
+}
+
+void	reverse_dir_next(t_dir **lst)
+{
+	t_dir	*head;
+	t_dir	*cur;
+	t_dir	*prev;
+	t_dir	*next;
+
+	prev = NULL;
+	head = *lst;
+	if (head == NULL || head->next == NULL)
+		return ;
+	cur = head;
+	next = cur->next;
+	while (cur != NULL)
+	{
+		cur->next = prev;
+		prev = cur;
+		cur = next;
+		if (cur != NULL)
+			next = cur->next;
+	}
+	*lst = prev;
+}
+
+void	reverse_dir_sub(t_dir **lst)
+{
+	t_dir	*head;
+	t_dir	*cur;
+	t_dir	*prev;
+	t_dir	*next;
+
+	prev = NULL;
+	head = *lst;
+	if (head == NULL || head->sub == NULL)
+		return ;
+	cur = head;
+	next = cur->sub;
+	while (cur != NULL)
+	{
+		cur->sub = prev;
+		prev = cur;
+		cur = next;
+		if (cur != NULL)
+			next = cur->sub;
+	}
+	*lst = prev;
+}

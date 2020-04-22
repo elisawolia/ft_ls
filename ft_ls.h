@@ -26,16 +26,16 @@
 
 #define MAX(a,b) (a > b) ? a : b
 
-typedef	struct	s_opt
+typedef	struct		s_opt
 {
-	uint16_t	l;
-	uint16_t	a;
-	uint16_t	R;
-	uint16_t	t;
-	uint16_t	r;
-}				t_opt;
+	uint16_t		l;
+	uint16_t		a;
+	uint16_t		R;
+	uint16_t		t;
+	uint16_t		r;
+}					t_opt;
 
-typedef struct s_file
+typedef struct		s_file
 {
 	char			*file_name;
 	unsigned long	mode;
@@ -45,9 +45,9 @@ typedef struct s_file
 	long long		size;
 	time_t			time;
 	struct s_file	*next;
-}				t_file;
+}					t_file;
 
-typedef	struct s_dir
+typedef	struct		s_dir
 {
 	char			*name;
 	int				max_uid;
@@ -55,12 +55,12 @@ typedef	struct s_dir
 	int				max_size;
 	int				max_name;
 	long long		total;
-	struct s_file			*files;
-	struct s_dir			*sub;
-	struct s_dir			*next;
-	struct s_dir			*mult;
-	
-}				t_dir;
+	time_t 			time;
+	struct s_file	*files;
+	struct s_dir	*sub;
+	struct s_dir	*next;
+	struct s_dir	*mult;	
+}					t_dir;
 
 /*
 *
@@ -69,9 +69,8 @@ typedef	struct s_dir
 */
 
 #include <stdio.h>
-void	print_opt(t_opt *opt);
-void	dir_prt(t_dir *dir);
-
+void				print_opt(t_opt *opt);
+void				dir_prt(t_dir *dir);
 
 /*
 *
@@ -79,37 +78,38 @@ void	dir_prt(t_dir *dir);
 *
 */
 
-void	mergeSort(t_file **h, double (*f)(t_file *a, t_file *b));
-t_file	*sortedMerge(t_file *a, t_file *b, double (*f)(t_file *a, t_file *b));
-void	frontBackSplit(t_file *src, t_file **front, t_file **back);
-double		defSort(t_file *a, t_file *b);
-double		timeSort(t_file *a, t_file *b);
-void	reverse(t_file **lst);
+void				merge_sort(t_file **h, double (*f)(t_file *a, t_file *b));
+t_file				*sorted_merge(t_file *a, t_file *b, double (*f)(t_file *a, t_file *b));
+void				front_back_split(t_file *src, t_file **front, t_file **back);
+double				def_sort(t_file *a, t_file *b);
+double				time_sort(t_file *a, t_file *b);
+void				reverse(t_file **lst);
 
-double		defSortDir(t_dir *a, t_dir *b);
-void	mergeSortDir(t_dir **h, double (*f)(t_dir *a, t_dir *b), int flag);
-t_dir	*sortedMergeDir(t_dir *a, t_dir *b, double (*f)(t_dir *a, t_dir *b), int flag);
-void frontBackSplitDir(t_dir *src, t_dir **front, t_dir **back, int flag);
+double				def_sort_dir(t_dir *a, t_dir *b);
+double				time_sort_dir(t_dir *a, t_dir *b);
+void				merge_sort_dir(t_dir **h, double (*f)(t_dir *a, t_dir *b), int flag);
+t_dir				*sorted_merge_dir(t_dir *a, t_dir *b, double (*f)(t_dir *a, t_dir *b), int flag);
+void				front_back_split_dir(t_dir *src, t_dir **front, t_dir **back, int flag);
+void				reverse_dir_next(t_dir **lst);
+void				reverse_dir_sub(t_dir **lst);
 
+void				read_dir(char *dirname, t_opt **opt, t_dir *d);
 
-void	read_dir(char *dirname, t_opt **opt, t_dir *d);
+int					count_max(long long n);
+int					ft_findedot(char *name);
+int					count_files(t_file *file);
 
+t_file				*new_file(struct dirent *d, t_dir *dir);
+void				file_add(t_file **alst, t_file *new);
+t_dir				*init_dir(DIR *dir, t_opt *opt, char *name, t_dir *di);
+void				dir_sub(t_dir *dir, t_dir *new);
+void				dir_next(t_dir **alst, t_dir *new);
+t_dir				*new_dir(char *name, time_t time);
 
-int		count_max(long long n);
-int		ft_findedot(char *name);
-int		count_files(t_file *file);
+void				print_list(t_dir *dir);
+void				print_list_l(t_dir *dir);
 
-t_file	*new_file(struct dirent *d, t_dir *dir);
-void	file_add(t_file **alst, t_file *new);
-t_dir	*init_dir(DIR *dir, t_opt *opt, char *name, t_dir *di);
-void	dir_sub(t_dir *dir, t_dir *new);
-void	dir_next(t_dir **alst, t_dir *new);
-t_dir	*new_dir(char *name);
-
-void print_list(t_dir *dir);
-void print_list_l(t_dir *dir);
-
-void	free_files(t_file **list);
-void	free_dir(t_dir **dir);
+void				free_files(t_file **list);
+void				free_dir(t_dir **dir);
 
 #endif
