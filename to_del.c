@@ -7,7 +7,7 @@ void	print_opt(t_opt *opt)
 	printf("a is %u\n", opt->a);
 	printf("t is %u\n", opt->t);
 	printf("r is %u\n", opt->r);
-	printf("R is %u\n", opt->R);
+	printf("R is %u\n", opt->rec);
 	printf("\n");
 }
 

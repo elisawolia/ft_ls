@@ -71,15 +71,14 @@ void	dir_next(t_dir **alst, t_dir *new)
 void	free_dir(t_dir **dir)
 {
 	free((*dir)->name);
-	free_files(&((*dir)->files));
-//	if ((*dir)->time)
-//		free(time);
+	if ((*dir)->files)
+		free_files(&((*dir)->files));
 	if ((*dir)->sub)
 		free_dir(&((*dir)->sub));
 	if ((*dir)->next)
 		free_dir(&((*dir)->next));
 	if ((*dir)->mult)
-		free_dir(&((*dir)->sub));
+		free_dir(&((*dir)->mult));
 	free(*dir);
 }
 

@@ -30,7 +30,7 @@ typedef	struct		s_opt
 {
 	uint16_t		l;
 	uint16_t		a;
-	uint16_t		R;
+	uint16_t		rec;
 	uint16_t		t;
 	uint16_t		r;
 }					t_opt;

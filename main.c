@@ -25,7 +25,7 @@ t_opt	*malloc_opt(void)
 	opt->l = 0;
 	opt->a = 0;
 	opt ->r = 0;
-	opt->R = 0;
+	opt->rec = 0;
 	opt->t = 0;
 	return (opt);
 }
@@ -44,7 +44,7 @@ void	read_opt(char *str, t_opt **opt)
 		if (str[i] == 't')
 			(*opt)->t = 1;
 		if (str[i] == 'R')
-			(*opt)->R = 1;
+			(*opt)->rec = 1;
 		if (str[i] == 'r')
 			(*opt)->r = 1;
 		if (str[i] != 'l' && str[i] != 'a' && str[i] != 't' && str[i] != 'R' && str[i] != 'r')
@@ -97,7 +97,6 @@ void	print_r(t_dir *dir, t_opt **opt)
 	{
 		read_dir(dir->next->name, opt, dir->next);
 	}
-
 }
 	
 
@@ -205,13 +204,12 @@ void	read_dir(char *dirname, t_opt **opt, t_dir *d)
 	if (!dir)
 	{
 		perror("diropen");
-		free(dir);
 		free(*opt);
 		exit(1);
 	};
 	direct = init_dir(dir, *opt, dirname, d);
-//	free(dir);
-	if ((*opt)->R == 1)
+	closedir(dir);
+	if ((*opt)->rec == 1)
 	{
 		print_r(direct, opt);
 	}
@@ -224,7 +222,8 @@ void	read_dir(char *dirname, t_opt **opt, t_dir *d)
 	{
 		print_list(direct);
 	}
-//	free_dir(&direct);
+	if ((*opt)->rec != 1 || (!direct->next && !direct->sub && !direct->mult))
+		free_dir(&direct);
 }
 
 void	read_mult_dir(char **dirname, int i, int argc, t_opt **opt)
@@ -249,9 +248,9 @@ void	read_mult_dir(char **dirname, int i, int argc, t_opt **opt)
 	tmp = direct;
 	while (tmp != NULL)
 	{
-		if ((*opt)->R == 0 && argc != i + 1)
+		if ((*opt)->rec == 0 && argc != i + 1)
 			printf("%s:\n",tmp->name);
-		if ((*opt)->R == 1)
+		if ((*opt)->rec == 1)
 		{
 			print_r(tmp, opt);
 		}
@@ -278,7 +277,7 @@ int	main(int argc, char **argv)
 
 	i = 1;
 	opt = malloc_opt();
-	dirname = ".";
+	dirname = ft_strdup(".");
 	while (i < argc)
 	{
 		if (argv[i][0] == '-')
@@ -296,8 +295,9 @@ int	main(int argc, char **argv)
 		read_mult_dir(argv, i, argc, &opt);
 	}
 	free(opt);
-	int t = 0;
+	free(dirname);
+/*	int t = 0;
 	while (1)
-		t++;
+		t++;*/
 	return (0);
 }

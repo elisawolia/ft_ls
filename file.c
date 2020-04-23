@@ -22,7 +22,8 @@ void	file_add(t_file **alst, t_file *new)
 
 void	free_files(t_file **list)
 {
-	free((*list)->file_name);
+	if ((*list)->file_name)
+		free((*list)->file_name);
 	if ((*list)->next)
 		free_files(&((*list)->next));
 	free(*list);
@@ -33,6 +34,7 @@ t_file	*new_file(struct dirent *d, t_dir *dir)
 	t_file		*file;
 	char		*f_name;
 	char		*dir_name;
+	char		*new_dir_name;
 	struct stat	sb;
 
 	if (!(dir_name = ft_strjoin(dir->name, "/")))
@@ -61,11 +63,18 @@ t_file	*new_file(struct dirent *d, t_dir *dir)
 		perror("malloc");
 		exit(1);
 	}
+	if (!(new_dir_name = ft_strjoin(dir_name, file->file_name)))
+	{
+		free(dir_name);
+		free(f_name);
+		perror("malloc");
+		exit(1);
+	}
 	dir->total += (long long)sb.st_blocks;
 	file->mode = (unsigned long)sb.st_mode;
 	if (S_ISDIR(file->mode) && ft_findedot(f_name))
 	{
-		dir_sub(dir, new_dir(ft_strjoin(dir_name, file->file_name), sb.st_mtime));
+		dir_sub(dir, new_dir(new_dir_name, sb.st_mtime));
 	}
 	file->uid = (long)sb.st_uid;
 	file->gid = (long)sb.st_gid;
@@ -79,8 +88,8 @@ t_file	*new_file(struct dirent *d, t_dir *dir)
 							(int)ft_strlen(getgrgid(file->gid)->gr_name));
 	dir->max_name = MAX(dir->max_name, (int)ft_strlen(d->d_name));
 	dir->max_size = MAX(dir->max_size, count_max(file->size));
-	// free sb ??
 	free(f_name);
 	free(dir_name);
+	free(new_dir_name);
 	return (file);
 }
