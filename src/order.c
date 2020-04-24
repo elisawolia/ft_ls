@@ -22,6 +22,11 @@ double		time_sort(t_file *a, t_file *b)
 	return (b->time - a->time);
 }
 
+double		size_sort(t_file *a, t_file *b)
+{
+	return ((double)(b->size - a->size));
+}
+
 void	reverse(t_file **lst)
 {
 	t_file	*head;
@@ -114,6 +119,11 @@ double		def_sort_dir(t_dir *a, t_dir *b)
 double		time_sort_dir(t_dir *a, t_dir *b)
 {
 	return (b->time - a->time);
+}
+
+double		size_sort_dir(t_dir *a, t_dir *b)
+{
+	return ((double)(b->size - a->size));
 }
 
 void	merge_sort_dir(t_dir **h, double (*f)(t_dir *a, t_dir *b), int flag)
@@ -226,6 +236,30 @@ void	reverse_dir_next(t_dir **lst)
 		cur = next;
 		if (cur != NULL)
 			next = cur->next;
+	}
+	*lst = prev;
+}
+
+void	reverse_dir_mult(t_dir **lst)
+{
+	t_dir	*head;
+	t_dir	*cur;
+	t_dir	*prev;
+	t_dir	*next;
+
+	prev = NULL;
+	head = *lst;
+	if (head == NULL || head->mult == NULL)
+		return ;
+	cur = head;
+	next = cur->mult;
+	while (cur != NULL)
+	{
+		cur->mult = prev;
+		prev = cur;
+		cur = next;
+		if (cur != NULL)
+			next = cur->mult;
 	}
 	*lst = prev;
 }

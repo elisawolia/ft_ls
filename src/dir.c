@@ -12,7 +12,7 @@
 
 #include "ft_ls.h"
 
-t_dir	*new_dir(char *name, time_t time)
+t_dir	*new_dir(char *name, time_t time, long long size)
 {
 	t_dir	*dir;
 
@@ -32,6 +32,7 @@ t_dir	*new_dir(char *name, time_t time)
 	dir->max_size = 0;
 	dir->max_name = 0;
 	dir->total = 0;
+	dir->size = size;
 	dir->files = NULL;
 	dir->time = time;
 	dir->sub = NULL;
@@ -86,13 +87,19 @@ t_dir	*init_dir(DIR *dir, t_opt *opt, char *name, t_dir *di)
 {
 	struct dirent	*d;
 	t_dir			*direct;
+	struct stat	sb;
 
 	d = NULL;
 	if (di != NULL)
 	{
 		direct = di;
 	}
-	else if (!(direct = new_dir(name, 0)))
+	if (lstat(name, &sb) == -1)
+	{
+		perror("lstat");
+		exit(EXIT_FAILURE);
+	}
+	else if (!(direct = new_dir(name, sb.st_mtime, (long long)sb.st_size)))
 		return (0);
 	while ((d = readdir(dir)) != NULL)
 	{
@@ -102,6 +109,8 @@ t_dir	*init_dir(DIR *dir, t_opt *opt, char *name, t_dir *di)
 	merge_sort(&(direct->files), &def_sort);
 	if (opt->t)
 		merge_sort(&(direct->files), &time_sort);
+	if (opt->s)
+		merge_sort(&(direct->files), &size_sort);
 	if (opt->r)
 		reverse(&(direct->files));
 	return (direct);

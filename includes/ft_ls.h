@@ -22,7 +22,7 @@
 #include <time.h>
 #include <pwd.h>
 #include <grp.h>
-#include "libft/libft.h"
+#include "../libft/libft.h"
 
 #define MAX(a,b) (a > b) ? a : b
 
@@ -33,6 +33,9 @@ typedef	struct		s_opt
 	uint16_t		rec;
 	uint16_t		t;
 	uint16_t		r;
+	uint16_t		one;
+	uint16_t		c;
+	uint16_t		s;
 }					t_opt;
 
 typedef struct		s_file
@@ -55,6 +58,7 @@ typedef	struct		s_dir
 	int				max_size;
 	int				max_name;
 	long long		total;
+	long long		size;
 	time_t 			time;
 	struct s_file	*files;
 	struct s_dir	*sub;
@@ -83,15 +87,18 @@ t_file				*sorted_merge(t_file *a, t_file *b, double (*f)(t_file *a, t_file *b))
 void				front_back_split(t_file *src, t_file **front, t_file **back);
 double				def_sort(t_file *a, t_file *b);
 double				time_sort(t_file *a, t_file *b);
+double				size_sort(t_file *a, t_file *b);
 void				reverse(t_file **lst);
 
 double				def_sort_dir(t_dir *a, t_dir *b);
 double				time_sort_dir(t_dir *a, t_dir *b);
+double				size_sort_dir(t_dir *a, t_dir *b);
 void				merge_sort_dir(t_dir **h, double (*f)(t_dir *a, t_dir *b), int flag);
 t_dir				*sorted_merge_dir(t_dir *a, t_dir *b, double (*f)(t_dir *a, t_dir *b), int flag);
 void				front_back_split_dir(t_dir *src, t_dir **front, t_dir **back, int flag);
 void				reverse_dir_next(t_dir **lst);
 void				reverse_dir_sub(t_dir **lst);
+void				reverse_dir_mult(t_dir **lst);
 
 void				read_dir(char *dirname, t_opt **opt, t_dir *d);
 
@@ -104,10 +111,11 @@ void				file_add(t_file **alst, t_file *new);
 t_dir				*init_dir(DIR *dir, t_opt *opt, char *name, t_dir *di);
 void				dir_sub(t_dir *dir, t_dir *new);
 void				dir_next(t_dir **alst, t_dir *new);
-t_dir				*new_dir(char *name, time_t time);
+t_dir				*new_dir(char *name, time_t time, long long size);
 
 void				print_list(t_dir *dir);
 void				print_list_l(t_dir *dir);
+void				print_one(t_dir *dir);
 
 void				free_files(t_file **list);
 void				free_dir(t_dir **dir);

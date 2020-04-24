@@ -74,7 +74,7 @@ t_file	*new_file(struct dirent *d, t_dir *dir)
 	file->mode = (unsigned long)sb.st_mode;
 	if (S_ISDIR(file->mode) && ft_findedot(f_name))
 	{
-		dir_sub(dir, new_dir(new_dir_name, sb.st_mtime));
+		dir_sub(dir, new_dir(new_dir_name, sb.st_mtime, (long long)sb.st_size));
 	}
 	file->uid = (long)sb.st_uid;
 	file->gid = (long)sb.st_gid;
