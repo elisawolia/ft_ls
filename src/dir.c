@@ -90,14 +90,14 @@ t_dir	*init_dir(DIR *dir, t_opt *opt, char *name, t_dir *di)
 	struct stat	sb;
 
 	d = NULL;
-	if (di != NULL)
-	{
-		direct = di;
-	}
 	if (lstat(name, &sb) == -1)
 	{
 		perror("lstat");
 		exit(EXIT_FAILURE);
+	}
+	if (di != NULL)
+	{
+		direct = di;
 	}
 	else if (!(direct = new_dir(name, sb.st_mtime, (long long)sb.st_size)))
 		return (0);
