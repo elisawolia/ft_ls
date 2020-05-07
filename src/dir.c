@@ -103,6 +103,15 @@ t_dir	*init_dir(DIR *dir, t_opt *opt, char *name, t_dir *di)
 		return (0);
 	while ((d = readdir(dir)) != NULL)
 	{
+		if (opt->d)
+		{
+			if (!ft_strcmp(d->d_name, name))
+			{
+				file_add(&(direct->files), new_file(d, direct));
+				break;
+			}
+			continue;
+		}
 		if ((d->d_name[0] != '.' && !opt->a) || opt->a)
 			file_add(&(direct->files), new_file(d, direct));
 	}

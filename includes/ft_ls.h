@@ -36,6 +36,7 @@ typedef	struct		s_opt
 	uint16_t		one;
 	uint16_t		c;
 	uint16_t		s;
+	uint16_t		d;
 }					t_opt;
 
 typedef struct		s_file

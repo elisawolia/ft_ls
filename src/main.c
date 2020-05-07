@@ -24,6 +24,7 @@ t_opt	*malloc_opt(void)
 	}
 	opt->l = 0;
 	opt->a = 0;
+	opt->d = 0;
 	opt ->r = 0;
 	opt->rec = 0;
 	opt->t = 0;
@@ -40,6 +41,8 @@ void	read_opt(char *str, t_opt **opt)
 	i = 1;
 	while (str[i] != '\0')
 	{
+		if (str[i] == 'd')
+			(*opt)->d = 1;
 		if (str[i] == 'l')
 		{
 			(*opt)->l = 1;
@@ -78,11 +81,16 @@ void	read_opt(char *str, t_opt **opt)
 			if ((*opt)->one == 1)
 				(*opt)->one = 0;
 		}
-		if (str[i] != 'S' && str[i] != 'C' && str[i] != '1' && str[i] != 'l' && str[i] != 'a' && str[i] != 't' && str[i] != 'R' && str[i] != 'r')
+		if (str[i] == 'd')
+		{
+			(*opt)->d = 1;
+			if ((*opt)->rec == 1)
+				(*opt)->rec = 0;
+		}
+		if (str[i] != 'd' && str[i] != 'S' && str[i] != 'C' && str[i] != '1' && str[i] != 'l' && str[i] != 'a' && str[i] != 't' && str[i] != 'R' && str[i] != 'r')
 		{
 			perror("ft_ls");
 			// printf("usage: ./ft_ls [-Ralrt] [file ...]\n");
-			free(*opt);
 			exit(1);
 		}
 		i++;
@@ -247,6 +255,22 @@ void print_one(t_dir *dir)
 	}
 }
 
+void print_d(t_opt *opt, t_dir *dir)
+{
+	t_dir *tmp;
+
+	tmp = dir;
+	while (tmp != NULL)
+	{
+		if (opt->l == 1)
+			print_list_l(tmp);
+		else  if (opt->one == 1)
+			print_one(tmp);
+		tmp = tmp->mult;
+	}
+
+}
+
 void	read_dir(char *dirname, t_opt **opt, t_dir *d)
 {
 	t_dir	*direct;
@@ -267,7 +291,8 @@ void	read_dir(char *dirname, t_opt **opt, t_dir *d)
 	}
 	else if ((*opt)->l == 1)
 	{
-		printf("total %lld\n", direct->total);
+		if (!(*opt)->d)
+			printf("total %lld\n", direct->total);
 		print_list_l(direct);
 	}
 	else  if ((*opt)->one == 1)
@@ -310,6 +335,11 @@ void	read_mult_dir(char **dirname, int i, int argc, t_opt **opt)
 	tmp = direct;
 	while (tmp != NULL)
 	{
+		if ((*opt)->d)
+		{
+			print_d(*opt, tmp);
+			break;
+		}
 		if ((*opt)->rec == 0 && argc != i + 1)
 			printf("%s:\n",tmp->name);
 		if ((*opt)->rec == 1)

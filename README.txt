@@ -6,6 +6,7 @@ Tasks left to do:
 + free memory
 - optimization
 - bonus
+-d multiple problem with adding dic to files
 - Norme
 
 Bonuses:
