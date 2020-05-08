@@ -6,10 +6,11 @@ Tasks left to do:
 + free memory
 - optimization
 - bonus
--d multiple problem with adding dic to files
++ d multiple problem with adding dic to files
 - Norme
 
 Bonuses:
 - Column display: -C (Set by default) (column are hard)
 - Display one entry per line: -1
 - Sort by size: -S
+- Print directories only

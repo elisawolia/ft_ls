@@ -257,18 +257,35 @@ void print_one(t_dir *dir)
 
 void print_d(t_opt *opt, t_dir *dir)
 {
-	t_dir *tmp;
+	t_file	*files;
+	t_dir 	*tmp;
 
 	tmp = dir;
 	while (tmp != NULL)
 	{
-		if (opt->l == 1)
-			print_list_l(tmp);
-		else  if (opt->one == 1)
-			print_one(tmp);
+		file_add(&(files), tmp->files);
 		tmp = tmp->mult;
 	}
-
+	dir->files = files;
+	merge_sort(&(dir->files), &def_sort);
+	if (opt->t)
+		merge_sort(&(dir->files), &time_sort);
+	if (opt->s)
+		merge_sort(&(dir->files), &size_sort);
+	if (opt->r)
+		reverse(&(dir->files));
+	if (opt->l == 1)
+	{
+		print_list_l(dir);
+	}
+	else  if (opt->one == 1)
+	{
+		print_one(dir);
+	}
+	else
+	{
+		print_list(dir);
+	}
 }
 
 void	read_dir(char *dirname, t_opt **opt, t_dir *d)

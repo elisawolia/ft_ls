@@ -29,7 +29,7 @@ void	free_files(t_file **list)
 	free(*list);
 }
 
-t_file	*new_file(struct dirent *d, t_dir *dir)
+t_file	*new_file(struct dirent *d, t_dir *dir, char *name)
 {
 	t_file		*file;
 	char		*f_name;
@@ -90,6 +90,14 @@ t_file	*new_file(struct dirent *d, t_dir *dir)
 	dir->max_size = MAX(dir->max_size, count_max(file->size));
 	free(f_name);
 	free(dir_name);
-	free(new_dir_name);
+	free(new_dir_name);	
+	if (name != NULL)
+	{
+		if (!(file->file_name = ft_strdup(name)))
+		{
+			perror("malloc");
+			exit(1);
+		}
+	}
 	return (file);
 }
