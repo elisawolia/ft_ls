@@ -261,6 +261,7 @@ void print_d(t_opt *opt, t_dir *dir)
 	t_dir 	*tmp;
 
 	tmp = dir;
+	files = NULL;
 	while (tmp != NULL)
 	{
 		file_add(&(files), tmp->files);
@@ -333,7 +334,6 @@ void	read_mult_dir(char **dirname, int i, int argc, t_opt **opt)
 
 	j = i;
 	direct = NULL;
-	tmp = NULL;
 	while (j < argc)
 	{
 		dir = opendir(dirname[j]);	

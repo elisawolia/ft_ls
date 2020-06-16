@@ -22,7 +22,8 @@
 #include <time.h>
 #include <pwd.h>
 #include <grp.h>
-#include "../libft/libft.h"
+#include "../libft/libft/includes/libft.h"
+#include "../libft/ft_printf/includes/ft_printf.h"
 
 #define MAX(a,b) (a > b) ? a : b
 
@@ -106,6 +107,7 @@ void				read_dir(char *dirname, t_opt **opt, t_dir *d);
 int					count_max(long long n);
 int					ft_findedot(char *name);
 int					count_files(t_file *file);
+void				ft_putspace(size_t n);
 
 t_file				*new_file(struct dirent *d, t_dir *dir, char *name);
 void				file_add(t_file **alst, t_file *new);

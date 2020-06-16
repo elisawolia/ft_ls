@@ -62,10 +62,10 @@ void	merge_sort(t_file **h, double (*f)(t_file *a, t_file *b))
 	b = NULL;
 	if ((head == NULL) || (head->next == NULL))
 		return ;
-	front_back_split(head, &a, &b); 
+	front_back_split(head, &a, &b);
 	merge_sort(&a, f);
 	merge_sort(&b, f);
-	*h = sorted_merge(a, b, f); 
+	*h = sorted_merge(a, b, f);
 }
 
 t_file	*sorted_merge(t_file *a, t_file *b, double (*f)(t_file *a, t_file *b))
@@ -105,8 +105,8 @@ void front_back_split(t_file *src, t_file **front, t_file **back)
 			slow = slow->next;
 			fast = fast->next;
 		}
-	} 
-    *front = src; 
+	}
+    *front = src;
     *back = slow->next; 
     slow->next = NULL; 
 }

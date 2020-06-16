@@ -25,6 +25,18 @@ int		count_max(long long n)
 	return (i);
 }
 
+void	ft_putspace(size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < n)
+	{
+		ft_putchar(' ');
+		i++;
+	}
+}
+
 int		ft_findedot(char *name)
 {
 	int i;
