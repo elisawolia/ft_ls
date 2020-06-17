@@ -24,6 +24,7 @@ t_opt	*malloc_opt(void)
 	}
 	opt->l = 0;
 	opt->a = 0;
+	opt->m = 0;
 	opt->d = 0;
 	opt ->r = 0;
 	opt->rec = 0;
@@ -50,6 +51,8 @@ void	read_opt(char *str, t_opt **opt)
 				(*opt)->one = 0;
 			if ((*opt)->c == 1)
 				(*opt)->c = 0;
+			if ((*opt)->m == 1)
+				(*opt)->m = 0;
 		}
 		if (str[i] == 'a')
 			(*opt)->a = 1;
@@ -72,8 +75,20 @@ void	read_opt(char *str, t_opt **opt)
 				(*opt)->l = 0;
 			if ((*opt)->c == 1)
 				(*opt)->c = 0;
+			if ((*opt)->m == 1)
+				(*opt)->m = 0;
 		}
-		if (str[i] == 'C')
+		if (str[i] == 'm')
+		{
+			(*opt)->m = 1;
+			if ((*opt)->l == 1)
+				(*opt)->l = 0;
+			if ((*opt)->one == 1)
+				(*opt)->one = 0;
+			if ((*opt)->c == 1)
+				(*opt)->c = 0;
+		}
+		if (str[i] == 'C' && (*opt)->m != 1)
 		{
 			(*opt)->c = 1;
 			if ((*opt)->l == 1)
@@ -87,7 +102,7 @@ void	read_opt(char *str, t_opt **opt)
 			if ((*opt)->rec == 1)
 				(*opt)->rec = 0;
 		}
-		if (str[i] != 'd' && str[i] != 'S' && str[i] != 'C' && str[i] != '1' && str[i] != 'l' && str[i] != 'a' && str[i] != 't' && str[i] != 'R' && str[i] != 'r')
+		if (str[i] != 'd' && str[i] != 'S' && str[i] != 'C' && str[i] != '1' && str[i] != 'l' && str[i] != 'a' && str[i] != 't' && str[i] != 'R' && str[i] != 'r' && str[i] != 'm')
 		{
 			perror("ft_ls");
 			// printf("usage: ./ft_ls [-Ralrt] [file ...]\n");
@@ -102,12 +117,12 @@ void	print_r(t_dir *dir, t_opt **opt)
 	if (ft_strcmp(dir->name, "."))
 	{
 		ft_putchar('\n');
-		printf("%s:\n",dir->name);
+		ft_printf("%s:\n",dir->name);
 	}
 	if ((*opt)->l == 1)
 	{
 		if (dir->total != 0)
-			printf("total %lld\n", dir->total);
+			ft_printf("total %lld\n", dir->total);
 		print_list_l(dir);
 	}
 	else if ((*opt)->one == 1)
@@ -146,7 +161,22 @@ void	print_r(t_dir *dir, t_opt **opt)
 		read_dir(dir->next->name, opt, dir->next);
 	}
 }
-	
+
+void print_m(t_dir *dir)
+{
+	t_file *tmp;
+
+	tmp = dir->files;
+	while(tmp != NULL)
+	{
+		ft_printf("%s", tmp->file_name);
+		if (tmp->next != NULL)
+			ft_putstr(", ");
+		if (tmp->next == NULL)
+			ft_putchar('\n');
+		tmp = tmp->next;
+	}
+}
 
 void print_list_l(t_dir *dir)
 {
@@ -187,12 +217,31 @@ void print_list_l(t_dir *dir)
 			(S_IXUSR & tmp->mode) ? ft_putchar('t') : ft_putchar('T');
 		else
 			(S_IXOTH & tmp->mode) ? ft_putchar('x') : ft_putchar('-');
-		printf("%4ld ", tmp->link);
-		printf("%-*s", dir->max_uid + 1, getpwuid(tmp->uid)->pw_name);
-		printf("%*s ", dir->max_gid + 1, getgrgid(tmp->gid)->gr_name);
-		printf("%*lld ", dir->max_size, tmp->size);
-		printf("%.12s ", ctime(&tmp->time) + 4);
-		printf("%s\n", tmp->file_name);
+		ft_printf("%4ld ", tmp->link);
+		ft_printf("%s", getpwuid(tmp->uid)->pw_name);
+		long int i = 0;
+		while (i < (dir->max_uid + 1) - (long int)ft_strlen(getpwuid(tmp->uid)->pw_name))
+		{
+			ft_putchar(' ');
+			i++;
+		}
+		i = 0;
+		while (i < (dir->max_gid + 1) - (long int)ft_strlen(getgrgid(tmp->gid)->gr_name))
+		{
+			ft_putchar(' ');
+			i++;
+		}
+		ft_printf("%s ", getgrgid(tmp->gid)->gr_name);
+		i = 0;
+		while (i < (dir->max_size) - (long long int)(count_max(tmp->size)))
+		{
+			ft_putchar(' ');
+			i++;
+		}
+		ft_printf("%d ", tmp->size);
+		ft_printf("%.12s ", ctime(&tmp->time) + 4);
+		ft_printf("%s", tmp->file_name);
+		ft_putchar('\n');
 		tmp = tmp->next;
 	}
 }
@@ -234,11 +283,20 @@ void print_list(t_dir *dir)
 		while(tmp != NULL)
 		{
 			if (j % rows == i)
-				printf("%-*s\t",dir->max_name ,tmp->file_name);
+			{
+
+				ft_printf("%s\t", tmp->file_name);
+				long long int i = 0;
+				while (i < (dir->max_uid) - (long long int)ft_strlen(tmp->file_name))
+				{
+					ft_putchar(' ');
+					i++;
+				}
+			}
 			j++;
 			tmp = tmp->next;
 		}
-		printf("\n");
+		ft_putchar('\n');
 		i++;
 	}
 }
@@ -250,7 +308,7 @@ void print_one(t_dir *dir)
 	tmp = dir->files;
 	while(tmp != NULL)
 	{
-		printf("%s\n",tmp->file_name);
+		ft_printf("%s\n",tmp->file_name);
 		tmp = tmp->next;
 	}
 }
@@ -310,12 +368,16 @@ void	read_dir(char *dirname, t_opt **opt, t_dir *d)
 	else if ((*opt)->l == 1)
 	{
 		if (!(*opt)->d)
-			printf("total %lld\n", direct->total);
+			ft_printf("total %lld\n", direct->total);
 		print_list_l(direct);
 	}
 	else  if ((*opt)->one == 1)
 	{
 		print_one(direct);
+	}
+	else if ((*opt)->m == 1)
+	{
+		print_m(direct);
 	}
 	else
 	{
@@ -358,19 +420,23 @@ void	read_mult_dir(char **dirname, int i, int argc, t_opt **opt)
 			break;
 		}
 		if ((*opt)->rec == 0 && argc != i + 1)
-			printf("%s:\n",tmp->name);
+			ft_printf("%s:\n",tmp->name);
 		if ((*opt)->rec == 1)
 		{
 			print_r(tmp, opt);
 		}
 		else if ((*opt)->l == 1)
 		{
-			printf("total %lld\n", tmp->total);
+			ft_printf("total %lld\n", tmp->total);
 			print_list_l(tmp);
 		}
 		else  if ((*opt)->one == 1)
 		{
-			print_one(direct);
+			print_one(tmp);
+		}
+		else if ((*opt)->m == 1)
+		{
+			print_m(tmp);
 		}
 		else
 		{

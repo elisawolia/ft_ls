@@ -33,6 +33,7 @@ typedef	struct		s_opt
 	uint16_t		a;
 	uint16_t		rec;
 	uint16_t		t;
+	uint16_t		m;
 	uint16_t		r;
 	uint16_t		one;
 	uint16_t		c;

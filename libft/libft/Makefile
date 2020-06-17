@@ -12,6 +12,11 @@
 
 NAME = libft.a
 FLAG = -Wall -Wextra -Werror
+
+OBJ_DIR = obj/
+INC_DIR = includes/
+SRC_DIR = src/
+
 SRC_P1 = ft_memset.c\
 		 ft_bzero.c\
 		 ft_memcpy.c\
@@ -40,54 +45,76 @@ SRC_P1 = ft_memset.c\
 		 ft_isprint.c\
 		 ft_toupper.c\
 		 ft_tolower.c
+
 SRC_P2 = ft_memalloc.c\
-		ft_memdel.c\
-		ft_strnew.c\
-		ft_strdel.c\
-		ft_strclr.c\
-		ft_striter.c\
-		ft_striteri.c\
-		ft_strmap.c\
-		ft_strmapi.c\
-		ft_strequ.c\
-		ft_strnequ.c\
-		ft_strsub.c\
-		ft_strjoin.c\
-		ft_strtrim.c\
-		ft_strsplit.c\
-		ft_itoa.c\
-		ft_putchar.c\
-		ft_putstr.c\
-		ft_putendl.c\
-		ft_putnbr.c\
-		ft_putchar_fd.c\
-		ft_putstr_fd.c\
-		ft_putendl_fd.c\
-		ft_putnbr_fd.c
+		 ft_memdel.c\
+		 ft_strnew.c\
+		 ft_strdel.c\
+		 ft_strclr.c\
+		 ft_striter.c\
+		 ft_striteri.c\
+		 ft_strmap.c\
+		 ft_strmapi.c\
+		 ft_strequ.c\
+		 ft_strnequ.c\
+		 ft_strsub.c\
+		 ft_strjoin.c\
+		 ft_strtrim.c\
+		 ft_strsplit.c\
+		 ft_itoa.c\
+		 ft_putchar.c\
+		 ft_putstr.c\
+		 ft_putendl.c\
+		 ft_putnbr.c\
+		 ft_putchar_fd.c\
+		 ft_putstr_fd.c\
+		 ft_putendl_fd.c\
+		 ft_putnbr_fd.c
+
 SRC_PB = ft_lstnew.c\
-		ft_lstdelone.c\
-		ft_lstdel.c\
-		ft_lstadd.c\
-		ft_lstiter.c\
-		ft_lstmap.c
-HEADER = libft.h
+		 ft_lstdelone.c\
+		 ft_lstdel.c\
+		 ft_lstadd.c\
+		 ft_lstiter.c\
+		 ft_lstmap.c
+
 SRC_DOP = ft_swap.c\
 		  ft_cwords.c\
 		  ft_putw.c\
 		  ft_l.c\
 		  ft_itsymb.c
 
-$(NAME):
-	@gcc $(FLAG) ./$(SRC_P1) ./$(SRC_P2) ./$(SRC_PB) ./$(SRC_DOP) -c -I ./$(HEADER)
-	@ar rc $(NAME) ./*.o
-	@ranlib $(NAME)
+SRC_FILES = $(SRC_P1)\
+			$(SRC_P2)\
+			$(SRC_PB)\
+			$(SRC_DOP)
+
+HEADER = $(INC_DIR)libft.h
+
+OBJ = $(addprefix $(OBJ_DIR), $(SRC_FILES:.c=.o))
+SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
 
 all: $(NAME)
 
-clean:
-	@/bin/rm -f ./*.o
+$(NAME): $(HEADERS) $(OBJ_DIR) $(OBJ)
+	@ar rc $(NAME) $(OBJ)
+	@ranlib $(NAME)
+	@printf " ---- Libft is ready! ----\n"
 
-fclean:	clean
-	@/bin/rm -f $(NAME)
+$(OBJ_DIR):
+	@mkdir obj
+
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c $(HEADER) Makefile
+	@gcc $(FLAG) -I $(INC_DIR) -c $< -o $@
+
+clean:
+	@rm -rf $(OBJ_DIR)*
+	@printf " ---- object files have been removed! ----\n"
+
+fclean: clean
+	@rm -rf $(NAME)
+	@printf " ---- $(NAME) have been removed! ----\n"
 
 re: fclean all
+
+.PHONY: all clean fclean re header
