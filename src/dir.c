@@ -27,6 +27,7 @@ t_dir	*new_dir(char *name, time_t time, long long size)
 		perror("malloc");
 		exit(1);
 	}
+	dir->max_link = 0;
 	dir->max_uid = 0;
 	dir->max_gid = 0;
 	dir->max_size = 0;

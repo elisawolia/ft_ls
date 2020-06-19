@@ -5,11 +5,12 @@ Tasks left to do:
 - Makefile
 + free memory
 + optimization
-- bonus
++ bonus
 + d multiple problem with adding dic to files
 - Norme
 + bonus -m
-- fix -l output (hardlinks, spaces, lang. date)
+- fix -l output (softlinks)
+- documents
 
 Bonuses:
 - Column display: -C (Set by default) (column are hard)

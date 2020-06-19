@@ -82,12 +82,14 @@ t_file	*new_file(struct dirent *d, t_dir *dir, char *name)
 	file->size = (long long)sb.st_size;
 	file->time = sb.st_mtime;
 	file->next = NULL;
-	dir->max_uid = MAX(dir->max_uid,
+	dir->max_link = max(dir->max_link,
+							count_max(file->link));
+	dir->max_uid = max(dir->max_uid,
 							(int)ft_strlen(getpwuid(file->uid)->pw_name));
-	dir->max_gid = MAX(dir->max_gid,
+	dir->max_gid = max(dir->max_gid,
 							(int)ft_strlen(getgrgid(file->gid)->gr_name));
-	dir->max_name = MAX(dir->max_name, (int)ft_strlen(d->d_name));
-	dir->max_size = MAX(dir->max_size, count_max(file->size));
+	dir->max_name = max(dir->max_name, (int)ft_strlen(d->d_name));
+	dir->max_size = max(dir->max_size, count_max(file->size));
 	free(f_name);
 	free(dir_name);
 	free(new_dir_name);	

@@ -25,21 +25,45 @@
 #include "../libft/libft/includes/libft.h"
 #include "../libft/ft_printf/includes/ft_printf.h"
 
-#define MAX(a,b) (a > b) ? a : b
+/*
+ * t_opt is a structure, that holds given flags
+ * a - include directory entries whose names begin with a dot (.)
+ * c - (-C) force multi-column output
+ * d - directories are listed as plain files (not searched recursively)
+ * l - list in long format
+ * m - list files across the page, separated by commas
+ * one - (-1) force output to be one entry per line
+ * r - reverse the order of the sort
+ * rec - (-R) recursively list subdirectories encountered
+ * s - (-S) sort files by size
+ * t - sort by time modified (most recently modified first)
+ *     before sorting the operands by lexicographical order
+*/
 
 typedef	struct		s_opt
 {
-	uint16_t		l;
 	uint16_t		a;
-	uint16_t		rec;
-	uint16_t		t;
-	uint16_t		m;
-	uint16_t		r;
-	uint16_t		one;
 	uint16_t		c;
-	uint16_t		s;
 	uint16_t		d;
+	uint16_t		l;
+	uint16_t		m;
+	uint16_t		one;
+	uint16_t		r;
+	uint16_t		rec;
+	uint16_t		s;
+	uint16_t		t;
 }					t_opt;
+
+/*
+ * t_file is a list, that holds information about the files
+ * file_name - name of the file
+ * mode - 
+ * uid - 
+ * gid - 
+ * link - number of links
+ * size - the size of the file
+ * time - time of last modification
+*/
 
 typedef struct		s_file
 {
@@ -53,11 +77,30 @@ typedef struct		s_file
 	struct s_file	*next;
 }					t_file;
 
+/*
+ * t_dir is a list, that holds information about the directory
+ * name - name of the directory
+ * all of the max_* are needed for -l output
+ * max_uid - max number of letters in uid's of files
+ * max_gid - max number of letters in gid's of files
+ * max_link - max number of letters in link's of files
+ * max_size - max number of letters in size's of files
+ * max_name - max number of letters in name's of files
+ * total - the total number of file system blocks
+ * size - total size of the dir, needed to sort directories
+ * time - time of last modification of the directory, needed for sorting
+ * files - list of all tje files in the directory
+ * sub - the directory inside of this directory
+ * next - the sibling directory
+ * mult - next directory, when directories are specified 
+*/
+
 typedef	struct		s_dir
 {
 	char			*name;
 	int				max_uid;
 	int				max_gid;
+	int				max_link;
 	int				max_size;
 	int				max_name;
 	long long		total;
@@ -75,7 +118,6 @@ typedef	struct		s_dir
 *
 */
 
-#include <stdio.h>
 void				print_opt(t_opt *opt);
 void				dir_prt(t_dir *dir);
 
@@ -109,6 +151,7 @@ int					count_max(long long n);
 int					ft_findedot(char *name);
 int					count_files(t_file *file);
 void				ft_putspace(size_t n);
+ssize_t 			max(ssize_t a, ssize_t b);
 
 t_file				*new_file(struct dirent *d, t_dir *dir, char *name);
 void				file_add(t_file **alst, t_file *new);

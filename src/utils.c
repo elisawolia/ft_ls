@@ -17,6 +17,8 @@ int		count_max(long long n)
 	int i;
 
 	i = 1;
+	if (n == 0)
+		return (2);
 	while (n > 0)
 	{
 		i++;
@@ -60,4 +62,9 @@ int		count_files(t_file *file)
 		i++;
 	}
 	return (i);
+}
+
+ssize_t max(ssize_t a, ssize_t b)
+{
+	return (a > b ? a : b);
 }

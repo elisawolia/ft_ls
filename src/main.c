@@ -217,27 +217,14 @@ void print_list_l(t_dir *dir)
 			(S_IXUSR & tmp->mode) ? ft_putchar('t') : ft_putchar('T');
 		else
 			(S_IXOTH & tmp->mode) ? ft_putchar('x') : ft_putchar('-');
-		ft_printf("%4ld ", tmp->link);
+		ft_putchar(' ');
+		ft_putspace((dir->max_link + 1) - (long long int)(count_max(tmp->link)));
+		ft_printf("%ld ", tmp->link);
 		ft_printf("%s", getpwuid(tmp->uid)->pw_name);
-		long int i = 0;
-		while (i < (dir->max_uid + 1) - (long int)ft_strlen(getpwuid(tmp->uid)->pw_name))
-		{
-			ft_putchar(' ');
-			i++;
-		}
-		i = 0;
-		while (i < (dir->max_gid + 1) - (long int)ft_strlen(getgrgid(tmp->gid)->gr_name))
-		{
-			ft_putchar(' ');
-			i++;
-		}
+		ft_putspace((dir->max_uid + 1) - (long int)ft_strlen(getpwuid(tmp->uid)->pw_name));
+		ft_putspace((dir->max_gid + 1) - (long int)ft_strlen(getgrgid(tmp->gid)->gr_name));
 		ft_printf("%s ", getgrgid(tmp->gid)->gr_name);
-		i = 0;
-		while (i < (dir->max_size) - (long long int)(count_max(tmp->size)))
-		{
-			ft_putchar(' ');
-			i++;
-		}
+		ft_putspace((dir->max_size + 1) - (long long int)(count_max(tmp->size)));
 		ft_printf("%d ", tmp->size);
 		ft_printf("%.12s ", ctime(&tmp->time) + 4);
 		ft_printf("%s", tmp->file_name);
@@ -285,13 +272,14 @@ void print_list(t_dir *dir)
 			if (j % rows == i)
 			{
 
-				ft_printf("%s\t", tmp->file_name);
+				ft_printf("%s", tmp->file_name);
 				long long int i = 0;
-				while (i < (dir->max_uid) - (long long int)ft_strlen(tmp->file_name))
+				while (i < ((dir->max_name) - (long long int)ft_strlen(tmp->file_name)))
 				{
 					ft_putchar(' ');
 					i++;
 				}
+				ft_putchar('\t');
 			}
 			j++;
 			tmp = tmp->next;
