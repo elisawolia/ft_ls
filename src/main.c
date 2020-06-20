@@ -228,6 +228,8 @@ void print_list_l(t_dir *dir)
 		ft_printf("%d ", tmp->size);
 		ft_printf("%.12s ", ctime(&tmp->time) + 4);
 		ft_printf("%s", tmp->file_name);
+		if (S_ISLNK(tmp->mode))
+			ft_printf(" -> %s", tmp->soft_link);
 		ft_putchar('\n');
 		tmp = tmp->next;
 	}

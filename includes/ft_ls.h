@@ -57,9 +57,9 @@ typedef	struct		s_opt
 /*
  * t_file is a list, that holds information about the files
  * file_name - name of the file
- * mode - 
- * uid - 
- * gid - 
+ * mode - type of the file (file/dit/soft link/etc)
+ * uid - user identifier
+ * gid - group identifier
  * link - number of links
  * size - the size of the file
  * time - time of last modification
@@ -68,6 +68,7 @@ typedef	struct		s_opt
 typedef struct		s_file
 {
 	char			*file_name;
+	char			*soft_link;
 	unsigned long	mode;
 	long			uid;
 	long			gid;

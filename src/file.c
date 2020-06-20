@@ -23,7 +23,11 @@ void	file_add(t_file **alst, t_file *new)
 void	free_files(t_file **list)
 {
 	if ((*list)->file_name)
+	{
 		free((*list)->file_name);
+		if ((*list)->soft_link != NULL)
+			free((*list)->soft_link);
+	}
 	if ((*list)->next)
 		free_files(&((*list)->next));
 	free(*list);
@@ -36,7 +40,10 @@ t_file	*new_file(struct dirent *d, t_dir *dir, char *name)
 	char		*dir_name;
 	char		*new_dir_name;
 	struct stat	sb;
+	ssize_t		nbytes;
+	ssize_t		bufsiz;
 
+	nbytes = 0;
 	if (!(dir_name = ft_strjoin(dir->name, "/")))
 	{
 		perror("malloc");
@@ -70,6 +77,9 @@ t_file	*new_file(struct dirent *d, t_dir *dir, char *name)
 		perror("malloc");
 		exit(1);
 	}
+	bufsiz = sb.st_size + 1;
+	if (sb.st_size == 0)
+		bufsiz = 1024;
 	dir->total += (long long)sb.st_blocks;
 	file->mode = (unsigned long)sb.st_mode;
 	if (S_ISDIR(file->mode) && ft_findedot(f_name))
@@ -81,6 +91,20 @@ t_file	*new_file(struct dirent *d, t_dir *dir, char *name)
 	file->link = (long)sb.st_nlink;
 	file->size = (long long)sb.st_size;
 	file->time = sb.st_mtime;
+	file->soft_link = NULL;
+	if (S_ISLNK(file->mode))
+	{
+		if (!(file->soft_link = ft_memalloc(sb.st_size)))
+		{
+			perror("malloc");
+			exit(EXIT_FAILURE);
+		}
+		if ((nbytes = readlink(f_name, file->soft_link, bufsiz)) == -1)
+		{
+			perror("readlink");
+			exit(EXIT_FAILURE);
+		}
+	}
 	file->next = NULL;
 	dir->max_link = max(dir->max_link,
 							count_max(file->link));

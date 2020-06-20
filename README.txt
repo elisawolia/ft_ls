@@ -9,7 +9,8 @@ Tasks left to do:
 + d multiple problem with adding dic to files
 - Norme
 + bonus -m
-- fix -l output (softlinks)
++ fix -l output (softlinks)
+- time diff sorting
 - documents
 
 Bonuses:
