@@ -91,6 +91,8 @@ t_file	*new_file(struct dirent *d, t_dir *dir, char *name)
 	file->link = (long)sb.st_nlink;
 	file->size = (long long)sb.st_size;
 	file->time = sb.st_mtime;
+	file->sec = (long)sb.st_mtimespec.tv_sec;
+	file->nsec = (long)sb.st_mtimespec.tv_nsec;
 	file->soft_link = NULL;
 	if (S_ISLNK(file->mode))
 	{

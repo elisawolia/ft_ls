@@ -22,6 +22,16 @@ double		time_sort(t_file *a, t_file *b)
 	return (b->time - a->time);
 }
 
+double		time_sort_sec(t_file *a, t_file *b)
+{
+	return ((double)(b->sec - a->sec));
+}
+
+double		time_sort_nsec(t_file *a, t_file *b)
+{
+	return ((double)(b->nsec - a->nsec));
+}
+
 double		size_sort(t_file *a, t_file *b)
 {
 	return ((double)(b->size - a->size));

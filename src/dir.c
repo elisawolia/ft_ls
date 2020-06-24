@@ -118,7 +118,11 @@ t_dir	*init_dir(DIR *dir, t_opt *opt, char *name, t_dir *di)
 	}
 	merge_sort(&(direct->files), &def_sort);
 	if (opt->t)
+	{
+		merge_sort(&(direct->files), &time_sort_nsec);
+		merge_sort(&(direct->files), &time_sort_sec);
 		merge_sort(&(direct->files), &time_sort);
+	}
 	if (opt->s)
 		merge_sort(&(direct->files), &size_sort);
 	if (opt->r)

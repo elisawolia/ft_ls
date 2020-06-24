@@ -75,6 +75,8 @@ typedef struct		s_file
 	long			link;
 	long long		size;
 	time_t			time;
+	long			sec;
+	long			nsec;
 	struct s_file	*next;
 }					t_file;
 
@@ -133,6 +135,8 @@ t_file				*sorted_merge(t_file *a, t_file *b, double (*f)(t_file *a, t_file *b))
 void				front_back_split(t_file *src, t_file **front, t_file **back);
 double				def_sort(t_file *a, t_file *b);
 double				time_sort(t_file *a, t_file *b);
+double				time_sort_sec(t_file *a, t_file *b);
+double				time_sort_nsec(t_file *a, t_file *b);
 double				size_sort(t_file *a, t_file *b);
 void				reverse(t_file **lst);
 
