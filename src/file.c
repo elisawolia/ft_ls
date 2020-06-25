@@ -45,38 +45,17 @@ t_file	*new_file(struct dirent *d, t_dir *dir, char *name)
 
 	nbytes = 0;
 	if (!(dir_name = ft_strjoin(dir->name, "/")))
-	{
-		perror("malloc");
-		exit(1);
-	}
+		malloc_err();
 	if (!(f_name = ft_strjoin(dir_name, d->d_name)))
-	{
-		free(dir_name);
-		perror("malloc");
-		exit(1);
-	}
+		malloc_err();
 	if (lstat(f_name, &sb) == -1)
-	{
-		perror("lstat");
-		exit(EXIT_FAILURE);
-	}
+		lstat_error();
 	if (!(file = ft_memalloc(sizeof(t_file))))
-	{
-		perror("malloc");
-		exit(1);
-	}
+		malloc_err();
 	if (!(file->file_name = ft_strdup(d->d_name)))
-	{
-		perror("malloc");
-		exit(1);
-	}
+		malloc_err();
 	if (!(new_dir_name = ft_strjoin(dir_name, file->file_name)))
-	{
-		free(dir_name);
-		free(f_name);
-		perror("malloc");
-		exit(1);
-	}
+		malloc_err();
 	bufsiz = sb.st_size + 1;
 	if (sb.st_size == 0)
 		bufsiz = 1024;
@@ -97,10 +76,7 @@ t_file	*new_file(struct dirent *d, t_dir *dir, char *name)
 	if (S_ISLNK(file->mode))
 	{
 		if (!(file->soft_link = ft_memalloc(sb.st_size)))
-		{
-			perror("malloc");
-			exit(EXIT_FAILURE);
-		}
+			malloc_err();
 		if ((nbytes = readlink(f_name, file->soft_link, bufsiz)) == -1)
 		{
 			perror("readlink");
@@ -118,14 +94,11 @@ t_file	*new_file(struct dirent *d, t_dir *dir, char *name)
 	dir->max_size = max(dir->max_size, count_max(file->size));
 	free(f_name);
 	free(dir_name);
-	free(new_dir_name);	
+	free(new_dir_name);
 	if (name != NULL)
 	{
 		if (!(file->file_name = ft_strdup(name)))
-		{
-			perror("malloc");
-			exit(1);
-		}
+			malloc_err();
 	}
 	return (file);
 }

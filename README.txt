@@ -12,6 +12,7 @@ Tasks left to do:
 + fix -l output (softlinks)
 - time diff sorting
 - documents
+- flag 'c' is flag 'C'
 
 Bonuses:
 - Column display: -C (Set by default) (column are hard)

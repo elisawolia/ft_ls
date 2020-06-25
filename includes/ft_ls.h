@@ -155,7 +155,7 @@ void				read_dir(char *dirname, t_opt **opt, t_dir *d);
 int					count_max(long long n);
 int					ft_findedot(char *name);
 int					count_files(t_file *file);
-void				ft_putspace(size_t n);
+void				ft_putspace(ssize_t n);
 ssize_t 			max(ssize_t a, ssize_t b);
 
 t_file				*new_file(struct dirent *d, t_dir *dir, char *name);
@@ -168,8 +168,13 @@ t_dir				*new_dir(char *name, time_t time, long long size);
 void				print_list(t_dir *dir);
 void				print_list_l(t_dir *dir);
 void				print_one(t_dir *dir);
+void				print_m(t_dir *dir);
+void				print_d(t_opt *opt, t_dir *dir);
+int 				rows_print(t_dir *dir);
 
 void				free_files(t_file **list);
 void				free_dir(t_dir **dir);
+void				malloc_err(void);
+void				lstat_error(void);
 
 #endif

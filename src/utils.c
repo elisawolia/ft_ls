@@ -27,9 +27,9 @@ int		count_max(long long n)
 	return (i);
 }
 
-void	ft_putspace(size_t n)
+void	ft_putspace(ssize_t n)
 {
-	size_t	i;
+	ssize_t	i;
 
 	i = 0;
 	while (i < n)
@@ -41,18 +41,19 @@ void	ft_putspace(size_t n)
 
 int		ft_findedot(char *name)
 {
-	int i;
+	int	i;
 
 	i = ft_strlen(name);
-	if (name[i - 1] == '.' && (name[i - 2] == '/' || (name[i - 2] == '.' && name[i - 3] == '/')))
+	if (name[i - 1] == '.' && (name[i - 2] == '/'
+		|| (name[i - 2] == '.' && name[i - 3] == '/')))
 		return (0);
 	return (1);
 }
 
 int		count_files(t_file *file)
 {
-	int i;
-	t_file *tmp;
+	int		i;
+	t_file	*tmp;
 
 	i = 0;
 	tmp = file;
@@ -64,7 +65,19 @@ int		count_files(t_file *file)
 	return (i);
 }
 
-ssize_t max(ssize_t a, ssize_t b)
+void	lstat_error(void)
+{
+	perror("lstat");
+	exit(1);
+}
+
+void	malloc_err(void)
+{
+	perror("malloc");
+	exit(1);
+}
+
+ssize_t	max(ssize_t a, ssize_t b)
 {
 	return (a > b ? a : b);
 }

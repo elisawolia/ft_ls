@@ -18,15 +18,12 @@ t_opt	*malloc_opt(void)
 	t_opt *opt;
 
 	if (!(opt = ft_memalloc(sizeof(t_opt))))
-	{
-		perror("malloc");
-		exit(1);
-	}
+		malloc_err();
 	opt->l = 0;
 	opt->a = 0;
 	opt->m = 0;
 	opt->d = 0;
-	opt ->r = 0;
+	opt->r = 0;
 	opt->rec = 0;
 	opt->t = 0;
 	opt->one = 0;
@@ -102,10 +99,11 @@ void	read_opt(char *str, t_opt **opt)
 			if ((*opt)->rec == 1)
 				(*opt)->rec = 0;
 		}
-		if (str[i] != 'd' && str[i] != 'S' && str[i] != 'C' && str[i] != '1' && str[i] != 'l' && str[i] != 'a' && str[i] != 't' && str[i] != 'R' && str[i] != 'r' && str[i] != 'm')
+		if (str[i] != 'd' && str[i] != 'S' && str[i] != 'C'
+			&& str[i] != '1' && str[i] != 'l' && str[i] != 'a'
+			&& str[i] != 't' && str[i] != 'R' && str[i] != 'r' && str[i] != 'm')
 		{
-			perror("ft_ls");
-			// printf("usage: ./ft_ls [-Ralrt] [file ...]\n");
+			ft_printf("usage: ./ft_ls [-Ralrt] [file ...]\n");
 			exit(1);
 		}
 		i++;
@@ -117,7 +115,7 @@ void	print_r(t_dir *dir, t_opt **opt)
 	if (ft_strcmp(dir->name, "."))
 	{
 		ft_putchar('\n');
-		ft_printf("%s:\n",dir->name);
+		ft_printf("%s:\n", dir->name);
 	}
 	if ((*opt)->l == 1)
 	{
@@ -126,13 +124,9 @@ void	print_r(t_dir *dir, t_opt **opt)
 		print_list_l(dir);
 	}
 	else if ((*opt)->one == 1)
-	{
 		print_one(dir);
-	}
 	else
-	{
 		print_list(dir);
-	}
 	merge_sort_dir(&(dir->sub), &def_sort_dir, 1);
 	merge_sort_dir(&(dir->next), &def_sort_dir, 1);
 	if ((*opt)->t)
@@ -153,188 +147,31 @@ void	print_r(t_dir *dir, t_opt **opt)
 		reverse_dir_sub(&(dir->next));
 	}
 	if (dir->sub)
-	{
 		read_dir(dir->sub->name, opt, dir->sub);
-	}
 	if (dir->next)
-	{
 		read_dir(dir->next->name, opt, dir->next);
-	}
 }
 
-void print_m(t_dir *dir)
+/*
+** col_width = ближайшей число кратное 8 (по табу)
+*/
+
+int		rows_print(t_dir *dir)
 {
-	t_file *tmp;
-
-	tmp = dir->files;
-	while(tmp != NULL)
-	{
-		ft_printf("%s", tmp->file_name);
-		if (tmp->next != NULL)
-			ft_putstr(", ");
-		if (tmp->next == NULL)
-			ft_putchar('\n');
-		tmp = tmp->next;
-	}
-}
-
-void print_list_l(t_dir *dir)
-{
-	t_file *tmp;
-
-	tmp = dir->files;
-	while(tmp != NULL)
-	{
-		if (S_ISBLK(tmp->mode))
-			ft_putchar('b');
-		else if (S_ISCHR(tmp->mode))
-			ft_putchar('c');
-		else if (S_ISFIFO(tmp->mode))
-			ft_putchar('f');
-		else if (S_ISREG(tmp->mode))
-			ft_putchar('-');
-		else if (S_ISDIR(tmp->mode))
-			ft_putchar('d');
-		else if (S_ISLNK(tmp->mode))
-			ft_putchar('l');
-		else
-			ft_putchar('s');
-		(S_IRUSR & tmp->mode) ? ft_putchar('r') : ft_putchar('-');
-		(S_IWUSR & tmp->mode) ? ft_putchar('w') : ft_putchar('-');
-		if (S_ISUID & tmp->mode)
-			(S_IXUSR & tmp->mode) ? ft_putchar('s') : ft_putchar('S');
-		else
-			(S_IXUSR & tmp->mode) ? ft_putchar('x') : ft_putchar('-');
-		(S_IRGRP & tmp->mode) ? ft_putchar('r') : ft_putchar('-');
-		(S_IWGRP & tmp->mode) ? ft_putchar('w') : ft_putchar('-');
-		if (S_ISGID & tmp->mode)
-			(S_IXUSR & tmp->mode) ? ft_putchar('s') : ft_putchar('S');
-		else
-			(S_IXGRP & tmp->mode) ? ft_putchar('x') : ft_putchar('-');
-		(S_IROTH & tmp->mode) ? ft_putchar('r') : ft_putchar('-');
-		(S_IWOTH & tmp->mode) ? ft_putchar('w') : ft_putchar('-');
-		if (S_ISVTX & tmp->mode)
-			(S_IXUSR & tmp->mode) ? ft_putchar('t') : ft_putchar('T');
-		else
-			(S_IXOTH & tmp->mode) ? ft_putchar('x') : ft_putchar('-');
-		ft_putchar(' ');
-		ft_putspace((dir->max_link + 1) - (long long int)(count_max(tmp->link)));
-		ft_printf("%ld ", tmp->link);
-		ft_printf("%s", getpwuid(tmp->uid)->pw_name);
-		ft_putspace((dir->max_uid + 1) - (long int)ft_strlen(getpwuid(tmp->uid)->pw_name));
-		ft_putspace((dir->max_gid + 1) - (long int)ft_strlen(getgrgid(tmp->gid)->gr_name));
-		ft_printf("%s ", getgrgid(tmp->gid)->gr_name);
-		ft_putspace((dir->max_size + 1) - (long long int)(count_max(tmp->size)));
-		ft_printf("%d ", tmp->size);
-		ft_printf("%.12s ", ctime(&tmp->time) + 4);
-		ft_printf("%s", tmp->file_name);
-		if (S_ISLNK(tmp->mode))
-			ft_printf(" -> %s", tmp->soft_link);
-		ft_putchar('\n');
-		tmp = tmp->next;
-	}
-}
-
-int 	rows_print(t_dir *dir)
-{
-	int 	col_width;
-	int 	files_count;
-	struct  winsize w;
-	int 	numcols;
-	int 	numrows;
+	int				col_width;
+	int				files_count;
+	struct winsize	w;
+	int				numcols;
+	int				numrows;
 
 	files_count = count_files(dir->files);
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-	col_width = (dir->max_name + 8) & ~7; // col_width = ближайшей число кратное 8 (по табу)
+	col_width = (dir->max_name + 8) & ~7;
 	numcols = (w.ws_col / col_width > 0) ? w.ws_col / col_width : 1;
 	numrows = files_count / numcols;
 	if (files_count % numcols)
 		++numrows;
 	return (numrows);
-}
-
-void print_list(t_dir *dir)
-{
-	int 	rows;
-	int 	i;
-	int 	j;
-	t_file *tmp;
-	
-	tmp = dir->files;
-	rows = rows_print(dir);
-	i = 0;
-	j = 0;
-
-	while (i < rows)
-	{
-		j = 0;
-		tmp = dir->files;
-		while(tmp != NULL)
-		{
-			if (j % rows == i)
-			{
-
-				ft_printf("%s", tmp->file_name);
-				long long int i = 0;
-				while (i < ((dir->max_name) - (long long int)ft_strlen(tmp->file_name)))
-				{
-					ft_putchar(' ');
-					i++;
-				}
-				ft_putchar('\t');
-			}
-			j++;
-			tmp = tmp->next;
-		}
-		ft_putchar('\n');
-		i++;
-	}
-}
-
-void print_one(t_dir *dir)
-{
-	t_file *tmp;
-	
-	tmp = dir->files;
-	while(tmp != NULL)
-	{
-		ft_printf("%s\n",tmp->file_name);
-		tmp = tmp->next;
-	}
-}
-
-void print_d(t_opt *opt, t_dir *dir)
-{
-	t_file	*files;
-	t_dir 	*tmp;
-
-	tmp = dir;
-	files = NULL;
-	while (tmp != NULL)
-	{
-		file_add(&(files), tmp->files);
-		tmp = tmp->mult;
-	}
-	dir->files = files;
-	merge_sort(&(dir->files), &def_sort);
-	if (opt->t)
-		merge_sort(&(dir->files), &time_sort);
-	if (opt->s)
-		merge_sort(&(dir->files), &size_sort);
-	if (opt->r)
-		reverse(&(dir->files));
-	if (opt->l == 1)
-	{
-		print_list_l(dir);
-	}
-	else  if (opt->one == 1)
-	{
-		print_one(dir);
-	}
-	else
-	{
-		print_list(dir);
-	}
 }
 
 void	read_dir(char *dirname, t_opt **opt, t_dir *d)
@@ -348,31 +185,23 @@ void	read_dir(char *dirname, t_opt **opt, t_dir *d)
 		perror("diropen");
 		free(*opt);
 		exit(1);
-	};
+	}
 	direct = init_dir(dir, *opt, dirname, d);
 	closedir(dir);
 	if ((*opt)->rec == 1)
-	{
 		print_r(direct, opt);
-	}
 	else if ((*opt)->l == 1)
 	{
 		if (!(*opt)->d)
 			ft_printf("total %lld\n", direct->total);
 		print_list_l(direct);
 	}
-	else  if ((*opt)->one == 1)
-	{
+	else if ((*opt)->one == 1)
 		print_one(direct);
-	}
 	else if ((*opt)->m == 1)
-	{
 		print_m(direct);
-	}
 	else
-	{
 		print_list(direct);
-	}
 	if ((*opt)->rec != 1 || (!direct->next && !direct->sub && !direct->mult))
 		free_dir(&direct);
 }
@@ -382,13 +211,13 @@ void	read_mult_dir(char **dirname, int i, int argc, t_opt **opt)
 	t_dir	*direct;
 	t_dir	*tmp;
 	DIR		*dir;
-	int 	j;
+	int		j;
 
 	j = i;
 	direct = NULL;
 	while (j < argc)
 	{
-		dir = opendir(dirname[j]);	
+		dir = opendir(dirname[j]);
 		if (!dir)
 			perror("diropen");
 		dir_next(&direct, init_dir(dir, *opt, dirname[j], NULL));
@@ -407,38 +236,37 @@ void	read_mult_dir(char **dirname, int i, int argc, t_opt **opt)
 		if ((*opt)->d)
 		{
 			print_d(*opt, tmp);
-			break;
+			break ;
 		}
 		if ((*opt)->rec == 0 && argc != i + 1)
-			ft_printf("%s:\n",tmp->name);
+			ft_printf("%s:\n", tmp->name);
 		if ((*opt)->rec == 1)
-		{
 			print_r(tmp, opt);
-		}
 		else if ((*opt)->l == 1)
 		{
 			ft_printf("total %lld\n", tmp->total);
 			print_list_l(tmp);
 		}
-		else  if ((*opt)->one == 1)
-		{
+		else if ((*opt)->one == 1)
 			print_one(tmp);
-		}
 		else if ((*opt)->m == 1)
-		{
 			print_m(tmp);
-		}
 		else
-		{
 			print_list(tmp);
-		}
 		if (tmp->mult != NULL)
 			ft_putchar('\n');
 		tmp = tmp->mult;
 	}
 }
 
-int	main(int argc, char **argv)
+/*
+** Добавить в конце
+** int t = 0;
+** while (1)
+** t++;
+*/
+
+int		main(int argc, char **argv)
 {
 	t_opt	*opt;
 	char	*dirname;
@@ -452,21 +280,14 @@ int	main(int argc, char **argv)
 		if (argv[i][0] == '-')
 			read_opt(argv[i], &opt);
 		else
-			break;		
+			break ;
 		i++;
 	}
 	if (i == argc)
-	{
 		read_dir(dirname, &opt, NULL);
-	}
-	else 
-	{
+	else
 		read_mult_dir(argv, i, argc, &opt);
-	}
 	free(opt);
 	free(dirname);
-/*	int t = 0;
-	while (1)
-		t++;*/
 	return (0);
 }
