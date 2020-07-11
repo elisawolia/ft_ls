@@ -9,10 +9,11 @@ Tasks left to do:
 + d multiple problem with adding dic to files
 - Norme
 + bonus -m
+- single file
 + fix -l output (softlinks)
-- time diff sorting
++ time diff sorting
 - documents
-- flag 'c' is flag 'C'
++ flag 'c' is flag 'C'
 
 Bonuses:
 - Column display: -C (Set by default) (column are hard)

@@ -62,20 +62,6 @@ void	dir_next(t_dir **alst, t_dir *new)
 	(*alst) = new;
 }
 
-void	free_dir(t_dir **dir)
-{
-	free((*dir)->name);
-	if ((*dir)->files)
-		free_files(&((*dir)->files));
-	if ((*dir)->sub)
-		free_dir(&((*dir)->sub));
-	if ((*dir)->next)
-		free_dir(&((*dir)->next));
-	if ((*dir)->mult)
-		free_dir(&((*dir)->mult));
-	free(*dir);
-}
-
 void	sort_files(t_opt *opt, t_dir *direct)
 {
 	merge_sort(&(direct->files), &def_sort);

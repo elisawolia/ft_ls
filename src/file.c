@@ -20,19 +20,6 @@ void	file_add(t_file **alst, t_file *new)
 	(*alst) = new;
 }
 
-void	free_files(t_file **list)
-{
-	if ((*list)->file_name)
-	{
-		free((*list)->file_name);
-		if ((*list)->soft_link != NULL)
-			free((*list)->soft_link);
-	}
-	if ((*list)->next)
-		free_files(&((*list)->next));
-	free(*list);
-}
-
 t_file	*new_file(struct dirent *d, t_dir *dir, char *name)
 {
 	t_file		*file;

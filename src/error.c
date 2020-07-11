@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rlintill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,60 +12,14 @@
 
 #include "ft_ls.h"
 
-int		count_max(long long n)
+void	lstat_error(void)
 {
-	int i;
-
-	i = 1;
-	if (n == 0)
-		return (2);
-	while (n > 0)
-	{
-		i++;
-		n = n / 10;
-	}
-	return (i);
+	perror("lstat");
+	exit(1);
 }
 
-void	ft_putspace(ssize_t n)
+void	malloc_err(void)
 {
-	ssize_t	i;
-
-	i = 0;
-	while (i < n)
-	{
-		ft_putchar(' ');
-		i++;
-	}
-}
-
-int		ft_findedot(char *name)
-{
-	int	i;
-
-	i = ft_strlen(name);
-	if (name[i - 1] == '.' && (name[i - 2] == '/'
-		|| (name[i - 2] == '.' && name[i - 3] == '/')))
-		return (0);
-	return (1);
-}
-
-int		count_files(t_file *file)
-{
-	int		i;
-	t_file	*tmp;
-
-	i = 0;
-	tmp = file;
-	while (tmp != NULL)
-	{
-		tmp = tmp->next;
-		i++;
-	}
-	return (i);
-}
-
-ssize_t	max(ssize_t a, ssize_t b)
-{
-	return (a > b ? a : b);
+	perror("malloc");
+	exit(1);
 }

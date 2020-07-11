@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ordering_file_cond.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rlintill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,60 +12,27 @@
 
 #include "ft_ls.h"
 
-int		count_max(long long n)
+double	def_sort(t_file *a, t_file *b)
 {
-	int i;
-
-	i = 1;
-	if (n == 0)
-		return (2);
-	while (n > 0)
-	{
-		i++;
-		n = n / 10;
-	}
-	return (i);
+	return (ft_strcmp(a->file_name, b->file_name));
 }
 
-void	ft_putspace(ssize_t n)
+double	time_sort(t_file *a, t_file *b)
 {
-	ssize_t	i;
-
-	i = 0;
-	while (i < n)
-	{
-		ft_putchar(' ');
-		i++;
-	}
+	return (b->time - a->time);
 }
 
-int		ft_findedot(char *name)
+double	time_sort_sec(t_file *a, t_file *b)
 {
-	int	i;
-
-	i = ft_strlen(name);
-	if (name[i - 1] == '.' && (name[i - 2] == '/'
-		|| (name[i - 2] == '.' && name[i - 3] == '/')))
-		return (0);
-	return (1);
+	return ((double)(b->sec - a->sec));
 }
 
-int		count_files(t_file *file)
+double	time_sort_nsec(t_file *a, t_file *b)
 {
-	int		i;
-	t_file	*tmp;
-
-	i = 0;
-	tmp = file;
-	while (tmp != NULL)
-	{
-		tmp = tmp->next;
-		i++;
-	}
-	return (i);
+	return ((double)(b->nsec - a->nsec));
 }
 
-ssize_t	max(ssize_t a, ssize_t b)
+double	size_sort(t_file *a, t_file *b)
 {
-	return (a > b ? a : b);
+	return ((double)(b->size - a->size));
 }

@@ -117,15 +117,6 @@ typedef	struct		s_dir
 
 /*
 *
-*	Delete later
-*
-*/
-
-void				print_opt(t_opt *opt);
-void				dir_prt(t_dir *dir);
-
-/*
-*
 *	Sorting functions
 *
 */
@@ -171,6 +162,13 @@ void				print_one(t_dir *dir);
 void				print_m(t_dir *dir);
 void				print_d(t_opt *opt, t_dir *dir);
 int 				rows_print(t_dir *dir);
+
+/*
+ * opt.c
+*/
+
+void				read_opt(char *str, t_opt **opt);
+t_opt				*malloc_opt(void);
 
 void				free_files(t_file **list);
 void				free_dir(t_dir **dir);
