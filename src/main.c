@@ -130,13 +130,14 @@ void	printing_mult_dir(t_dir *direct, int i, int argc, t_opt **opt)
 			print_d(*opt, tmp);
 			break ;
 		}
-		if ((*opt)->rec == 0 && argc != i + 1)
+		if ((*opt)->rec == 0 && argc != i + 1 && tmp->file_added == 0)
 			ft_printf("%s:\n", tmp->name);
 		if ((*opt)->rec == 1)
 			print_r(tmp, opt);
 		else if ((*opt)->l == 1)
 		{
-			ft_printf("total %lld\n", tmp->total);
+			if (tmp->file_added == 0)
+				ft_printf("total %lld\n", tmp->total);
 			print_list_l(tmp);
 		}
 		else if ((*opt)->one == 1)
@@ -154,19 +155,47 @@ void	printing_mult_dir(t_dir *direct, int i, int argc, t_opt **opt)
 void	read_mult_dirs(char **dirname, int i, int argc, t_opt **opt)
 {
 	t_dir	*direct;
+	t_dir	*dir_files;
 	DIR		*dir;
 	int		j;
 
 	j = i;
 	direct = NULL;
+	dir_files = NULL;
 	while (j < argc)
 	{
 		dir = opendir(dirname[j]);
 		if (!dir)
-			perror("diropen");
-		dir_next(&direct, init_dir(dir, *opt, dirname[j], NULL));
+		{
+			struct dirent	*d;
+			struct stat		sb;
+			int				added;
+
+			d = NULL;
+			added = 0;
+			dir = opendir(".");
+			if (lstat(".", &sb) == -1)
+				lstat_error();
+			if (dir_files == NULL)
+				dir_files = new_dir(".", sb.st_mtime, (long long)sb.st_size);
+			dir_files->file_added = 1;
+			while ((d = readdir(dir)) != NULL)
+			{
+				if (ft_strcmp(dirname[j], d->d_name) == 0)
+				{
+					file_add(&(dir_files->files), new_file(d, dir_files, NULL));
+					added = 1;
+				}
+			}
+			if (added == 0)
+				ls_error(dirname[j]);
+			sort_files(*opt, dir_files);
+		}
+		else
+			dir_next(&direct, init_dir(dir, *opt, dirname[j], NULL));
 		j++;
 	}
+	dir_next(&direct, dir_files);
 	merge_sort_dir(&direct, &def_sort_dir, 0);
 	if ((*opt)->s)
 		merge_sort_dir(&direct, &size_sort_dir, 0);

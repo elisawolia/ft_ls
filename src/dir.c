@@ -21,6 +21,7 @@ t_dir	*new_dir(char *name, time_t time, long long size)
 		malloc_err();
 	if (!(dir->name = ft_strdup(name)))
 		malloc_err();
+	dir->file_added = 0;
 	dir->max_link = 0;
 	dir->max_uid = 0;
 	dir->max_gid = 0;

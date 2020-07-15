@@ -99,7 +99,7 @@ void		read_opt(char *str, t_opt **opt)
 			&& str[i] != '1' && str[i] != 'l' && str[i] != 'a'
 			&& str[i] != 't' && str[i] != 'R' && str[i] != 'r' && str[i] != 'm')
 		{
-			ft_printf("usage: ./ft_ls [-Ralrt] [file ...]\n");
+			ft_printf_fd(2,"usage: ./ft_ls [-RSC1alrtm] [file ...]\n");
 			exit(1);
 		}
 		i++;

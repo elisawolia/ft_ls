@@ -101,6 +101,7 @@ typedef struct		s_file
 typedef	struct		s_dir
 {
 	char			*name;
+	int				file_added;
 	int				max_uid;
 	int				max_gid;
 	int				max_link;
@@ -155,6 +156,7 @@ t_dir				*init_dir(DIR *dir, t_opt *opt, char *name, t_dir *di);
 void				dir_sub(t_dir *dir, t_dir *new);
 void				dir_next(t_dir **alst, t_dir *new);
 t_dir				*new_dir(char *name, time_t time, long long size);
+void				sort_files(t_opt *opt, t_dir *direct);
 
 void				print_list(t_dir *dir);
 void				print_list_l(t_dir *dir);
@@ -173,6 +175,7 @@ t_opt				*malloc_opt(void);
 void				free_files(t_file **list);
 void				free_dir(t_dir **dir);
 void				malloc_err(void);
+void				ls_error(char *file);
 void				lstat_error(void);
 
 #endif

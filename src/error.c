@@ -18,6 +18,12 @@ void	lstat_error(void)
 	exit(1);
 }
 
+void	ls_error(char *file)
+{
+	ft_printf_fd(2, "ls: %s: No such file or directory\n", file);
+	exit(1);
+}
+
 void	malloc_err(void)
 {
 	perror("malloc");
