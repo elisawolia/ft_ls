@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-#include <sys/ioctl.h>
 
 void	sorting_dir_r(t_dir *dir, t_opt **opt)
 {
@@ -118,6 +117,24 @@ void	read_dir(char *dirname, t_opt **opt, t_dir *d)
 		free_dir(&direct);
 }
 
+void	printing_mult_dir_continue(t_dir **tmp, t_opt **opt)
+{
+	if ((*opt)->rec == 1)
+		print_r(*tmp, opt);
+	else if ((*opt)->l == 1)
+	{
+		if ((*tmp)->file_added == 0)
+			ft_printf("total %lld\n", (*tmp)->total);
+		print_list_l(*tmp);
+	}
+	else if ((*opt)->one == 1)
+		print_one(*tmp);
+	else if ((*opt)->m == 1)
+		print_m(*tmp);
+	else
+		print_list(*tmp);
+}
+
 void	printing_mult_dir(t_dir *direct, int i, int argc, t_opt **opt)
 {
 	t_dir	*tmp;
@@ -132,24 +149,39 @@ void	printing_mult_dir(t_dir *direct, int i, int argc, t_opt **opt)
 		}
 		if ((*opt)->rec == 0 && argc != i + 1 && tmp->file_added == 0)
 			ft_printf("%s:\n", tmp->name);
-		if ((*opt)->rec == 1)
-			print_r(tmp, opt);
-		else if ((*opt)->l == 1)
-		{
-			if (tmp->file_added == 0)
-				ft_printf("total %lld\n", tmp->total);
-			print_list_l(tmp);
-		}
-		else if ((*opt)->one == 1)
-			print_one(tmp);
-		else if ((*opt)->m == 1)
-			print_m(tmp);
-		else
-			print_list(tmp);
+		printing_mult_dir_continue(&tmp, opt);
 		if (tmp->mult != NULL)
 			ft_putchar('\n');
 		tmp = tmp->mult;
 	}
+}
+
+void	add_files(char *file_name, t_dir **dir_files, t_opt **opt)
+{
+	struct dirent	*d;
+	struct stat		sb;
+	DIR				*dir;
+	int				added;
+
+	d = NULL;
+	added = 0;
+	dir = opendir(".");
+	if (lstat(".", &sb) == -1)
+		lstat_error();
+	if (*dir_files == NULL)
+		*dir_files = new_dir(".", sb.st_mtime, (long long)sb.st_size);
+	(*dir_files)->file_added = 1;
+	while ((d = readdir(dir)) != NULL)
+	{
+		if (ft_strcmp(file_name, d->d_name) == 0)
+		{
+			file_add(&((*dir_files)->files), new_file(d, *dir_files, NULL));
+			added = 1;
+		}
+	}
+	if (added == 0)
+		ls_error(file_name);
+	sort_files(*opt, *dir_files);
 }
 
 void	read_mult_dirs(char **dirname, int i, int argc, t_opt **opt)
@@ -164,33 +196,8 @@ void	read_mult_dirs(char **dirname, int i, int argc, t_opt **opt)
 	dir_files = NULL;
 	while (j < argc)
 	{
-		dir = opendir(dirname[j]);
-		if (!dir)
-		{
-			struct dirent	*d;
-			struct stat		sb;
-			int				added;
-
-			d = NULL;
-			added = 0;
-			dir = opendir(".");
-			if (lstat(".", &sb) == -1)
-				lstat_error();
-			if (dir_files == NULL)
-				dir_files = new_dir(".", sb.st_mtime, (long long)sb.st_size);
-			dir_files->file_added = 1;
-			while ((d = readdir(dir)) != NULL)
-			{
-				if (ft_strcmp(dirname[j], d->d_name) == 0)
-				{
-					file_add(&(dir_files->files), new_file(d, dir_files, NULL));
-					added = 1;
-				}
-			}
-			if (added == 0)
-				ls_error(dirname[j]);
-			sort_files(*opt, dir_files);
-		}
+		if (!(dir = opendir(dirname[j])))
+			add_files(dirname[j], &dir_files, opt);
 		else
 			dir_next(&direct, init_dir(dir, *opt, dirname[j], NULL));
 		j++;

@@ -14,17 +14,29 @@
 
 void	print_m(t_dir *dir)
 {
-	t_file	*tmp;
+	t_file			*tmp;
+	struct winsize	w;
+	int				w_width;
 
 	tmp = dir->files;
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+	w_width = w.ws_col;
 	while (tmp != NULL)
 	{
-		ft_printf("%s", tmp->file_name);
-		if (tmp->next != NULL)
-			ft_putstr(", ");
-		if (tmp->next == NULL)
+		w_width = w.ws_col - (ft_strlen(tmp->file_name) + 2);
+		while (w_width > 0 && tmp != NULL)
+		{
+			ft_printf("%s", tmp->file_name);
+			if (tmp->next != NULL)
+				ft_putstr(", ");
+			if (tmp->next == NULL)
+				ft_putchar('\n');
+			tmp = tmp->next;
+			if (tmp != NULL)
+				w_width -= (ft_strlen(tmp->file_name) + 2);
+		}
+		if (tmp != NULL)
 			ft_putchar('\n');
-		tmp = tmp->next;
 	}
 }
 

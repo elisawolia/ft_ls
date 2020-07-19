@@ -59,6 +59,31 @@ t_dir	*sorted_merge_dir(t_dir *a, t_dir *b,
 	return (result);
 }
 
+void	front_back_split_dir_help(t_dir **fast, t_dir **slow, int flag)
+{
+	while (*fast != NULL)
+	{
+		if (flag)
+		{
+			*fast = (*fast)->next;
+			if (*fast != NULL)
+			{
+				*slow = (*slow)->next;
+				*fast = (*fast)->next;
+			}
+		}
+		else
+		{
+			*fast = (*fast)->mult;
+			if (*fast != NULL)
+			{
+				*slow = (*slow)->mult;
+				*fast = (*fast)->mult;
+			}
+		}
+	}
+}
+
 void	front_back_split_dir(t_dir *src, t_dir **front, t_dir **back, int flag)
 {
 	t_dir	*fast;
@@ -70,27 +95,7 @@ void	front_back_split_dir(t_dir *src, t_dir **front, t_dir **back, int flag)
 		fast = src->next;
 	else
 		fast = src->mult;
-	while (fast != NULL)
-	{
-		if (flag)
-		{
-			fast = fast->next;
-			if (fast != NULL)
-			{
-				slow = slow->next;
-				fast = fast->next;
-			}
-		}
-		else
-		{
-			fast = fast->mult;
-			if (fast != NULL)
-			{
-				slow = slow->mult;
-				fast = fast->mult;
-			}
-		}
-	}
+	front_back_split_dir_help(&fast, &slow, flag);
 	*front = src;
 	if (flag)
 	{
