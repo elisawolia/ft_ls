@@ -17,15 +17,25 @@
 
 void	print_filename(uint16_t color, char *line, t_file *tmp)
 {
-	uint16_t	mode;
-	char		*name;
+	char		*color_name;
+	char		*end_name;
+	char		*pattern;
 
-	mode = tmp->mode;
-	name = ft_strdup(tmp->file_name);
+	color_name = NULL;
+	end_name = NULL;
+	pattern = NULL;
 	if (color)
-		ft_printf(ft_strjoin(get_color(mode), ft_strjoin(line, "{eoc}")), name);
+	{
+		color_name = get_color(tmp->mode);
+		end_name = ft_strjoin(line, "{EOC}");
+		pattern = ft_strjoin(color_name, end_name);
+		ft_printf(pattern, tmp->file_name);
+	}
 	else
-		ft_printf(line, name);
+		ft_printf(line, tmp->file_name);
+	free(color_name);
+	free(end_name);
+	free(pattern);
 }
 
 void	print_m(t_dir *dir, uint16_t color)
@@ -43,7 +53,6 @@ void	print_m(t_dir *dir, uint16_t color)
 		while (w_width > 0 && tmp != NULL)
 		{
 			print_filename(color, "%s", tmp);
-			//ft_printf("%s", tmp->file_name);
 			if (tmp->next != NULL)
 				ft_putstr(", ");
 			if (tmp->next == NULL)
@@ -120,7 +129,6 @@ void	print_list_l(t_dir *dir, uint16_t color)
 		ft_printf("%d ", tmp->size);
 		ft_printf("%.12s ", ctime(&tmp->time) + 4);
 		print_filename(color, "%s", tmp);
-		//ft_printf("%s", tmp->file_name);
 		if (S_ISLNK(tmp->mode))
 			ft_printf(" -> %s", tmp->soft_link);
 		ft_putchar('\n');
@@ -131,7 +139,6 @@ void	print_list_l(t_dir *dir, uint16_t color)
 void	print_list_info(t_file *tmp, int max_name, uint16_t color)
 {
 	print_filename(color, "%s", tmp);
-	//ft_printf("%s", tmp->file_name);
 	ft_putspace((max_name) -
 		(long long int)ft_strlen(tmp->file_name));
 	ft_putchar('\t');

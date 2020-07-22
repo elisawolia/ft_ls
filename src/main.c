@@ -148,7 +148,6 @@ void	printing_mult_dir(t_dir *direct, int i, int argc, t_opt **opt)
 			break ;
 		}
 		if ((*opt)->rec == 0 && argc != i + 1 && tmp->file_added == 0)
-			//print_filename((*opt)->g, "%s:\n", &tmp); // I don't realy know it 
 			ft_printf("%s:\n", tmp->name);
 		printing_mult_dir_continue(&tmp, opt);
 		if (tmp->mult != NULL)

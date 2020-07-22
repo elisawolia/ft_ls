@@ -10,89 +10,36 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef	FT_LS_H
+#ifndef FT_LS_H
 # define FT_LS_H
 
-#include <dirent.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/ioctl.h>
-#include <unistd.h>
-#include <time.h>
-#include <pwd.h>
-#include <grp.h>
-#include "../libft/libft/includes/libft.h"
-#include "../libft/ft_printf/includes/ft_printf.h"
+# include <dirent.h>
+# include <stdlib.h>
+# include <fcntl.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <sys/ioctl.h>
+# include <unistd.h>
+# include <time.h>
+# include <pwd.h>
+# include <grp.h>
+# include "../libft/libft/includes/libft.h"
+# include "../libft/ft_printf/includes/ft_printf.h"
 
 /*
-** Regular
-*/
-# define BLACK		"\033[0;30m"
-# define RED		"\033[0;31m"
-# define GREEN		"\033[0;32m"
-# define YELLOW		"\033[0;33m"
-# define BLUE		"\033[0;34m"
-# define MAGENTA	"\033[0;35m"
-# define CYAN		"\033[0;36m"
-# define WHITE		"\033[0;37m"
-
-/*
-** Bold
-*/
-# define BBLACK		"\033[1;30m"
-# define BRED		"\033[1;31m"
-# define BGREEN		"\033[1;32m"
-# define BYELLOW	"\033[1;33m"
-# define BBLUE		"\033[1;34m"
-# define BMAGENTA	"\033[1;35m"
-# define BCYAN		"\033[1;36m"
-# define BWHITE		"\033[1;37m"
-
-/*
-** Underline
-*/
-# define UBLACK  	"\033[4;30m"
-# define URED		"\033[4;31m"
-# define UGREEN		"\033[4;32m"
-# define UYELLOW	"\033[4;33m"
-# define UBLUE		"\033[4;34m"
-# define UMAGENTA	"\033[4;35m"
-# define UCYAN		"\033[4;36m"
-# define UWHITE		"\033[4;37m"
-
-/*
-** Background
-*/
-# define BGBLACK 	"\033[40m"
-# define BGRED		"\033[41m"
-# define BGGREEN	"\033[42m"
-# define BGYELLOW	"\033[43m"
-# define BGBLUE		"\033[44m"
-# define BGMAGENTA	"\033[45m"
-# define BGCYAN		"\033[46m"
-# define BGWHITE	"\033[47m"
-
-/*
-** Reset
-*/
-# define RESET "\033[0m"
-
-/*
- * t_opt is a structure, that holds given flags
- * a - include directory entries whose names begin with a dot (.)
- * c - (-C) force multi-column output
- * d - directories are listed as plain files (not searched recursively)
- * l - list in long format
- * m - list files across the page, separated by commas
- * one - (-1) force output to be one entry per line
- * r - reverse the order of the sort
- * rec - (-R) recursively list subdirectories encountered
- * s - (-S) sort files by size
- * t - sort by time modified (most recently modified first)
- *     before sorting the operands by lexicographical order
- * g - color output
+** t_opt is a structure, that holds given flags
+** a - include directory entries whose names begin with a dot (.)
+** c - (-C) force multi-column output
+** d - directories are listed as plain files (not searched recursively)
+** l - list in long format
+** m - list files across the page, separated by commas
+** one - (-1) force output to be one entry per line
+** r - reverse the order of the sort
+** rec - (-R) recursively list subdirectories encountered
+** s - (-S) sort files by size
+** t - sort by time modified (most recently modified first)
+**     before sorting the operands by lexicographical order
+** g - color output
 */
 
 typedef	struct		s_opt
@@ -111,14 +58,14 @@ typedef	struct		s_opt
 }					t_opt;
 
 /*
- * t_file is a list, that holds information about the files
- * file_name - name of the file
- * mode - type of the file (file/dit/soft link/etc)
- * uid - user identifier
- * gid - group identifier
- * link - number of links
- * size - the size of the file
- * time - time of last modification
+** t_file is a list, that holds information about the files
+** file_name - name of the file
+** mode - type of the file (file/dit/soft link/etc)
+** uid - user identifier
+** gid - group identifier
+** link - number of links
+** size - the size of the file
+** time - time of last modification
 */
 
 typedef struct		s_file
@@ -137,21 +84,21 @@ typedef struct		s_file
 }					t_file;
 
 /*
- * t_dir is a list, that holds information about the directory
- * name - name of the directory
- * all of the max_* are needed for -l output
- * max_uid - max number of letters in uid's of files
- * max_gid - max number of letters in gid's of files
- * max_link - max number of letters in link's of files
- * max_size - max number of letters in size's of files
- * max_name - max number of letters in name's of files
- * total - the total number of file system blocks
- * size - total size of the dir, needed to sort directories
- * time - time of last modification of the directory, needed for sorting
- * files - list of all tje files in the directory
- * sub - the directory inside of this directory
- * next - the sibling directory
- * mult - next directory, when directories are specified 
+** t_dir is a list, that holds information about the directory
+** name - name of the directory
+** all of the max_* are needed for -l output
+** max_uid - max number of letters in uid's of files
+** max_gid - max number of letters in gid's of files
+** max_link - max number of letters in link's of files
+** max_size - max number of letters in size's of files
+** max_name - max number of letters in name's of files
+** total - the total number of file system blocks
+** size - total size of the dir, needed to sort directories
+** time - time of last modification of the directory, needed for sorting
+** files - list of all tje files in the directory
+** sub - the directory inside of this directory
+** next - the sibling directory
+** mult - next directory, when directories are specified
 */
 
 typedef	struct		s_dir
@@ -165,17 +112,15 @@ typedef	struct		s_dir
 	int				max_name;
 	long long		total;
 	long long		size;
-	time_t 			time;
+	time_t			time;
 	struct s_file	*files;
 	struct s_dir	*sub;
 	struct s_dir	*next;
-	struct s_dir	*mult;	
+	struct s_dir	*mult;
 }					t_dir;
 
 /*
-*
-*	Sorting functions
-*
+**	Sorting functions
 */
 
 void				merge_sort(t_file **h, double (*f)(t_file *a, t_file *b));
@@ -204,7 +149,7 @@ int					count_max(long long n);
 int					ft_findedot(char *name);
 int					count_files(t_file *file);
 void				ft_putspace(ssize_t n);
-ssize_t 			max(ssize_t a, ssize_t b);
+ssize_t				max(ssize_t a, ssize_t b);
 
 t_file				*new_file(struct dirent *d, t_dir *dir, char *name);
 void				file_add(t_file **alst, t_file *new);
@@ -219,10 +164,10 @@ void				print_list_l(t_dir *dir, uint16_t color);
 void				print_one(t_dir *dir, uint16_t color);
 void				print_m(t_dir *dir, uint16_t color);
 void				print_d(t_opt *opt, t_dir *dir);
-int 				rows_print(t_dir *dir);
+int					rows_print(t_dir *dir);
 
 /*
- * opt.c
+** opt.c
 */
 
 void				read_opt(char *str, t_opt **opt);
