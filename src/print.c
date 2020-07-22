@@ -11,8 +11,24 @@
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+#include <sys/acl.h>
+#include <sys/stat.h>
+#include <sys/xattr.h>
 
-void	print_m(t_dir *dir)
+void	print_filename(uint16_t color, char *line, t_file *tmp)
+{
+	uint16_t	mode;
+	char		*name;
+
+	mode = tmp->mode;
+	name = ft_strdup(tmp->file_name);
+	if (color)
+		ft_printf(ft_strjoin(get_color(mode), ft_strjoin(line, "{eoc}")), name);
+	else
+		ft_printf(line, name);
+}
+
+void	print_m(t_dir *dir, uint16_t color)
 {
 	t_file			*tmp;
 	struct winsize	w;
@@ -26,7 +42,8 @@ void	print_m(t_dir *dir)
 		w_width = w.ws_col - (ft_strlen(tmp->file_name) + 2);
 		while (w_width > 0 && tmp != NULL)
 		{
-			ft_printf("%s", tmp->file_name);
+			print_filename(color, "%s", tmp);
+			//ft_printf("%s", tmp->file_name);
 			if (tmp->next != NULL)
 				ft_putstr(", ");
 			if (tmp->next == NULL)
@@ -81,7 +98,7 @@ void	print_rights(unsigned long mode)
 	ft_putchar(' ');
 }
 
-void	print_list_l(t_dir *dir)
+void	print_list_l(t_dir *dir, uint16_t color)
 {
 	t_file *tmp;
 
@@ -102,7 +119,8 @@ void	print_list_l(t_dir *dir)
 			(long long int)(count_max(tmp->size)));
 		ft_printf("%d ", tmp->size);
 		ft_printf("%.12s ", ctime(&tmp->time) + 4);
-		ft_printf("%s", tmp->file_name);
+		print_filename(color, "%s", tmp);
+		//ft_printf("%s", tmp->file_name);
 		if (S_ISLNK(tmp->mode))
 			ft_printf(" -> %s", tmp->soft_link);
 		ft_putchar('\n');
@@ -110,15 +128,16 @@ void	print_list_l(t_dir *dir)
 	}
 }
 
-void	print_list_info(t_file *tmp, int max_name)
+void	print_list_info(t_file *tmp, int max_name, uint16_t color)
 {
-	ft_printf("%s", tmp->file_name);
+	print_filename(color, "%s", tmp);
+	//ft_printf("%s", tmp->file_name);
 	ft_putspace((max_name) -
 		(long long int)ft_strlen(tmp->file_name));
 	ft_putchar('\t');
 }
 
-void	print_list(t_dir *dir)
+void	print_list(t_dir *dir, uint16_t color)
 {
 	int		rows;
 	int		i;
@@ -136,7 +155,7 @@ void	print_list(t_dir *dir)
 		while (tmp != NULL)
 		{
 			if (j % rows == i)
-				print_list_info(tmp, dir->max_name);
+				print_list_info(tmp, dir->max_name, color);
 			j++;
 			tmp = tmp->next;
 		}
@@ -145,14 +164,14 @@ void	print_list(t_dir *dir)
 	}
 }
 
-void	print_one(t_dir *dir)
+void	print_one(t_dir *dir, uint16_t color)
 {
 	t_file *tmp;
 
 	tmp = dir->files;
 	while (tmp != NULL)
 	{
-		ft_printf("%s\n", tmp->file_name);
+		print_filename(color, "%s\n", tmp);
 		tmp = tmp->next;
 	}
 }
@@ -178,9 +197,9 @@ void	print_d(t_opt *opt, t_dir *dir)
 	if (opt->r)
 		reverse(&(dir->files));
 	if (opt->l == 1)
-		print_list_l(dir);
+		print_list_l(dir, opt->g);
 	else if (opt->one == 1)
-		print_one(dir);
+		print_one(dir, opt->g);
 	else
-		print_list(dir);
+		print_list(dir, opt->g);
 }

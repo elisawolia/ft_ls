@@ -46,12 +46,12 @@ void	print_r(t_dir *dir, t_opt **opt)
 	{
 		if (dir->total != 0)
 			ft_printf("total %lld\n", dir->total);
-		print_list_l(dir);
+		print_list_l(dir, (*opt)->g);
 	}
 	else if ((*opt)->one == 1)
-		print_one(dir);
+		print_one(dir, (*opt)->g);
 	else
-		print_list(dir);
+		print_list(dir, (*opt)->g);
 	sorting_dir_r(dir, opt);
 	if (dir->sub)
 		read_dir(dir->sub->name, opt, dir->sub);
@@ -89,14 +89,14 @@ void	printing(t_dir *direct, t_opt **opt)
 	{
 		if (!(*opt)->d)
 			ft_printf("total %lld\n", direct->total);
-		print_list_l(direct);
+		print_list_l(direct, (*opt)->g);
 	}
 	else if ((*opt)->one == 1)
-		print_one(direct);
+		print_one(direct, (*opt)->g);
 	else if ((*opt)->m == 1)
-		print_m(direct);
+		print_m(direct, (*opt)->g);
 	else
-		print_list(direct);
+		print_list(direct, (*opt)->g);
 }
 
 void	read_dir(char *dirname, t_opt **opt, t_dir *d)
@@ -125,14 +125,14 @@ void	printing_mult_dir_continue(t_dir **tmp, t_opt **opt)
 	{
 		if ((*tmp)->file_added == 0)
 			ft_printf("total %lld\n", (*tmp)->total);
-		print_list_l(*tmp);
+		print_list_l(*tmp, (*opt)->g);
 	}
 	else if ((*opt)->one == 1)
-		print_one(*tmp);
+		print_one(*tmp, (*opt)->g);
 	else if ((*opt)->m == 1)
-		print_m(*tmp);
+		print_m(*tmp, (*opt)->g);
 	else
-		print_list(*tmp);
+		print_list(*tmp, (*opt)->g);
 }
 
 void	printing_mult_dir(t_dir *direct, int i, int argc, t_opt **opt)
@@ -148,6 +148,7 @@ void	printing_mult_dir(t_dir *direct, int i, int argc, t_opt **opt)
 			break ;
 		}
 		if ((*opt)->rec == 0 && argc != i + 1 && tmp->file_added == 0)
+			//print_filename((*opt)->g, "%s:\n", &tmp); // I don't realy know it 
 			ft_printf("%s:\n", tmp->name);
 		printing_mult_dir_continue(&tmp, opt);
 		if (tmp->mult != NULL)

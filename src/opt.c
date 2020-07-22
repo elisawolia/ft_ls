@@ -28,6 +28,7 @@ t_opt		*malloc_opt(void)
 	opt->one = 0;
 	opt->c = 0;
 	opt->s = 0;
+	opt->g = 0;
 	return (opt);
 }
 
@@ -58,6 +59,8 @@ static void	opt_check_continue(char str, t_opt *opt)
 		opt->d = 1;
 		opt->rec = 0;
 	}
+	if (str == 'G')
+		opt->g = 1;
 }
 
 static void	opt_check(char str, t_opt *opt)
@@ -96,10 +99,10 @@ void		read_opt(char *str, t_opt **opt)
 	{
 		opt_check(str[i], *opt);
 		if (str[i] != 'd' && str[i] != 'S' && str[i] != 'C'
-			&& str[i] != '1' && str[i] != 'l' && str[i] != 'a'
+			&& str[i] != '1' && str[i] != 'l' && str[i] != 'a' && str[i] != 'G'
 			&& str[i] != 't' && str[i] != 'R' && str[i] != 'r' && str[i] != 'm')
 		{
-			ft_printf_fd(2, "usage: ./ft_ls [-RSC1alrtm] [file ...]\n");
+			ft_printf_fd(2, "usage: ./ft_ls [-GRSC1alrtm] [file ...]\n");
 			exit(1);
 		}
 		i++;

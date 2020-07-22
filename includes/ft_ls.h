@@ -27,6 +27,59 @@
 #include "../libft/ft_printf/includes/ft_printf.h"
 
 /*
+** Regular
+*/
+# define BLACK		"\033[0;30m"
+# define RED		"\033[0;31m"
+# define GREEN		"\033[0;32m"
+# define YELLOW		"\033[0;33m"
+# define BLUE		"\033[0;34m"
+# define MAGENTA	"\033[0;35m"
+# define CYAN		"\033[0;36m"
+# define WHITE		"\033[0;37m"
+
+/*
+** Bold
+*/
+# define BBLACK		"\033[1;30m"
+# define BRED		"\033[1;31m"
+# define BGREEN		"\033[1;32m"
+# define BYELLOW	"\033[1;33m"
+# define BBLUE		"\033[1;34m"
+# define BMAGENTA	"\033[1;35m"
+# define BCYAN		"\033[1;36m"
+# define BWHITE		"\033[1;37m"
+
+/*
+** Underline
+*/
+# define UBLACK  	"\033[4;30m"
+# define URED		"\033[4;31m"
+# define UGREEN		"\033[4;32m"
+# define UYELLOW	"\033[4;33m"
+# define UBLUE		"\033[4;34m"
+# define UMAGENTA	"\033[4;35m"
+# define UCYAN		"\033[4;36m"
+# define UWHITE		"\033[4;37m"
+
+/*
+** Background
+*/
+# define BGBLACK 	"\033[40m"
+# define BGRED		"\033[41m"
+# define BGGREEN	"\033[42m"
+# define BGYELLOW	"\033[43m"
+# define BGBLUE		"\033[44m"
+# define BGMAGENTA	"\033[45m"
+# define BGCYAN		"\033[46m"
+# define BGWHITE	"\033[47m"
+
+/*
+** Reset
+*/
+# define RESET "\033[0m"
+
+/*
  * t_opt is a structure, that holds given flags
  * a - include directory entries whose names begin with a dot (.)
  * c - (-C) force multi-column output
@@ -39,6 +92,7 @@
  * s - (-S) sort files by size
  * t - sort by time modified (most recently modified first)
  *     before sorting the operands by lexicographical order
+ * g - color output
 */
 
 typedef	struct		s_opt
@@ -53,6 +107,7 @@ typedef	struct		s_opt
 	uint16_t		rec;
 	uint16_t		s;
 	uint16_t		t;
+	uint16_t		g;
 }					t_opt;
 
 /*
@@ -159,10 +214,10 @@ void				dir_next(t_dir **alst, t_dir *new);
 t_dir				*new_dir(char *name, time_t time, long long size);
 void				sort_files(t_opt *opt, t_dir *direct);
 
-void				print_list(t_dir *dir);
-void				print_list_l(t_dir *dir);
-void				print_one(t_dir *dir);
-void				print_m(t_dir *dir);
+void				print_list(t_dir *dir, uint16_t color);
+void				print_list_l(t_dir *dir, uint16_t color);
+void				print_one(t_dir *dir, uint16_t color);
+void				print_m(t_dir *dir, uint16_t color);
 void				print_d(t_opt *opt, t_dir *dir);
 int 				rows_print(t_dir *dir);
 
@@ -178,5 +233,9 @@ void				free_dir(t_dir **dir);
 void				malloc_err(void);
 void				ls_error(char *file);
 void				lstat_error(void);
+
+char				*get_color(unsigned long mode);
+char				*get_color_type(unsigned long mode);
+void				print_filename(uint16_t color, char *line, t_file *tmp);
 
 #endif
