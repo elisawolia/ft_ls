@@ -13,7 +13,7 @@
 NAME = ft_ls
 
 # files
-SRC	= main.c dir.c file.c utils.c order_files.c print.c opt.c ordering_file_cond.c ordering_dir_cond.c order_dir.c free.c error.c coloristica.c
+SRC	= main.c dir.c file.c utils.c order_files.c print.c print_r.c print_l.c print_utils.c print_mult.c opt.c ordering_file_cond.c ordering_dir_cond.c order_dir.c free.c error.c coloristica.c
 OBJ = $(SRC:.c=.o)
 
 LIBFT_A = libft.a

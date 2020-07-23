@@ -12,93 +12,6 @@
 
 #include "ft_ls.h"
 
-void	sorting_dir_r(t_dir *dir, t_opt **opt)
-{
-	merge_sort_dir(&(dir->sub), &def_sort_dir, 1);
-	merge_sort_dir(&(dir->next), &def_sort_dir, 1);
-	if ((*opt)->t)
-	{
-		merge_sort_dir(&(dir->sub), &time_sort_dir, 1);
-		merge_sort_dir(&(dir->next), &time_sort_dir, 1);
-	}
-	if ((*opt)->s)
-	{
-		merge_sort_dir(&(dir->sub), &size_sort_dir, 1);
-		merge_sort_dir(&(dir->next), &size_sort_dir, 1);
-	}
-	if ((*opt)->r)
-	{
-		reverse_dir_next(&(dir->sub));
-		reverse_dir_next(&(dir->next));
-		reverse_dir_sub(&(dir->sub));
-		reverse_dir_sub(&(dir->next));
-	}
-}
-
-void	print_r(t_dir *dir, t_opt **opt)
-{
-	if (ft_strcmp(dir->name, "."))
-	{
-		ft_putchar('\n');
-		ft_printf("%s:\n", dir->name);
-	}
-	if ((*opt)->l == 1)
-	{
-		if (dir->total != 0)
-			ft_printf("total %lld\n", dir->total);
-		print_list_l(dir, (*opt)->g);
-	}
-	else if ((*opt)->one == 1)
-		print_one(dir, (*opt)->g);
-	else
-		print_list(dir, (*opt)->g);
-	sorting_dir_r(dir, opt);
-	if (dir->sub)
-		read_dir(dir->sub->name, opt, dir->sub);
-	if (dir->next)
-		read_dir(dir->next->name, opt, dir->next);
-}
-
-/*
-** col_width = ближайшей число кратное 8 (по табу)
-*/
-
-int		rows_print(t_dir *dir)
-{
-	int				col_width;
-	int				files_count;
-	struct winsize	w;
-	int				numcols;
-	int				numrows;
-
-	files_count = count_files(dir->files);
-	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-	col_width = (dir->max_name + 8) & ~7;
-	numcols = (w.ws_col / col_width > 0) ? w.ws_col / col_width : 1;
-	numrows = files_count / numcols;
-	if (files_count % numcols)
-		++numrows;
-	return (numrows);
-}
-
-void	printing(t_dir *direct, t_opt **opt)
-{
-	if ((*opt)->rec == 1)
-		print_r(direct, opt);
-	else if ((*opt)->l == 1)
-	{
-		if (!(*opt)->d)
-			ft_printf("total %lld\n", direct->total);
-		print_list_l(direct, (*opt)->g);
-	}
-	else if ((*opt)->one == 1)
-		print_one(direct, (*opt)->g);
-	else if ((*opt)->m == 1)
-		print_m(direct, (*opt)->g);
-	else
-		print_list(direct, (*opt)->g);
-}
-
 void	read_dir(char *dirname, t_opt **opt, t_dir *d)
 {
 	t_dir	*direct;
@@ -117,46 +30,7 @@ void	read_dir(char *dirname, t_opt **opt, t_dir *d)
 		free_dir(&direct);
 }
 
-void	printing_mult_dir_continue(t_dir **tmp, t_opt **opt)
-{
-	if ((*opt)->rec == 1)
-		print_r(*tmp, opt);
-	else if ((*opt)->l == 1)
-	{
-		if ((*tmp)->file_added == 0)
-			ft_printf("total %lld\n", (*tmp)->total);
-		print_list_l(*tmp, (*opt)->g);
-	}
-	else if ((*opt)->one == 1)
-		print_one(*tmp, (*opt)->g);
-	else if ((*opt)->m == 1)
-		print_m(*tmp, (*opt)->g);
-	else
-		print_list(*tmp, (*opt)->g);
-}
-
-void	printing_mult_dir(t_dir *direct, int i, int argc, t_opt **opt)
-{
-	t_dir	*tmp;
-
-	tmp = direct;
-	while (tmp != NULL)
-	{
-		if ((*opt)->d)
-		{
-			print_d(*opt, tmp);
-			break ;
-		}
-		if ((*opt)->rec == 0 && argc != i + 1 && tmp->file_added == 0)
-			ft_printf("%s:\n", tmp->name);
-		printing_mult_dir_continue(&tmp, opt);
-		if (tmp->mult != NULL)
-			ft_putchar('\n');
-		tmp = tmp->mult;
-	}
-}
-
-void	add_files(char *file_name, t_dir **dir_files, t_opt **opt)
+static void	add_files(char *file_name, t_dir **dir_files, t_opt **opt)
 {
 	struct dirent	*d;
 	struct stat		sb;

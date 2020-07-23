@@ -32,6 +32,17 @@ t_opt		*malloc_opt(void)
 	return (opt);
 }
 
+static void	opt_check_continue_next(char str, t_opt *opt)
+{
+	if (str == 'd')
+	{
+		opt->d = 1;
+		opt->rec = 0;
+	}
+	if (str == 'G')
+		opt->g = 1;
+}
+
 static void	opt_check_continue(char str, t_opt *opt)
 {
 	if (str == '1')
@@ -54,13 +65,7 @@ static void	opt_check_continue(char str, t_opt *opt)
 		opt->l = 0;
 		opt->one = 0;
 	}
-	if (str == 'd')
-	{
-		opt->d = 1;
-		opt->rec = 0;
-	}
-	if (str == 'G')
-		opt->g = 1;
+	opt_check_continue_next(str, opt);
 }
 
 static void	opt_check(char str, t_opt *opt)

@@ -20,7 +20,7 @@ void	file_add(t_file **alst, t_file *new)
 	(*alst) = new;
 }
 
-void	soft_link(struct stat sb, t_file *file, char *f_name)
+static void	soft_link(struct stat sb, t_file *file, char *f_name)
 {
 	ssize_t		nbytes;
 	ssize_t		bufsiz;
@@ -42,7 +42,7 @@ void	soft_link(struct stat sb, t_file *file, char *f_name)
 	}
 }
 
-void	file_info(struct stat sb, t_file *file)
+static void	file_info(struct stat sb, t_file *file)
 {
 	file->mode = (unsigned long)sb.st_mode;
 	file->uid = (long)sb.st_uid;
@@ -56,7 +56,7 @@ void	file_info(struct stat sb, t_file *file)
 	file->next = NULL;
 }
 
-void	dir_info(struct stat sb, t_file *file, t_dir *dir, struct dirent *d)
+static void	dir_info(struct stat sb, t_file *file, t_dir *dir, struct dirent *d)
 {
 	dir->total += (long long)sb.st_blocks;
 	dir->max_link = max(dir->max_link,

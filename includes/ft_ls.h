@@ -166,6 +166,10 @@ void				print_m(t_dir *dir, uint16_t color);
 void				print_d(t_opt *opt, t_dir *dir);
 int					rows_print(t_dir *dir);
 
+void				printing_mult_dir(t_dir *direct, int i, int argc, t_opt **opt);
+void				printing(t_dir *direct, t_opt **opt);
+void				print_r(t_dir *dir, t_opt **opt);
+
 /*
 ** opt.c
 */
