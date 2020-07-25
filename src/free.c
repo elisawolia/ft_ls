@@ -38,3 +38,10 @@ void	free_files(t_file **list)
 		free_files(&((*list)->next));
 	free(*list);
 }
+
+void	free_new_file(char *f_name, char *dir_name, char *new_dir_name)
+{
+	free(f_name);
+	free(dir_name);
+	free(new_dir_name);
+}

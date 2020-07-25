@@ -35,7 +35,7 @@ static void	sorting_dir_r(t_dir *dir, t_opt **opt)
 	}
 }
 
-void	print_r(t_dir *dir, t_opt **opt)
+void		print_r(t_dir *dir, t_opt **opt)
 {
 	if (ft_strcmp(dir->name, "."))
 	{

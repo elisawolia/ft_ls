@@ -12,7 +12,7 @@
 
 #include "ft_ls.h"
 
-void	file_add(t_file **alst, t_file *new)
+void		file_add(t_file **alst, t_file *new)
 {
 	if (new == NULL)
 		return ;
@@ -69,7 +69,7 @@ static void	dir_info(struct stat sb, t_file *file, t_dir *dir, struct dirent *d)
 	dir->max_size = max(dir->max_size, count_max(file->size));
 }
 
-t_file	*new_file(struct dirent *d, t_dir *dir, char *name)
+t_file		*new_file(struct dirent *d, t_dir *dir, char *name)
 {
 	t_file		*file;
 	char		*f_name;
@@ -94,9 +94,7 @@ t_file	*new_file(struct dirent *d, t_dir *dir, char *name)
 	dir_info(sb, file, dir, d);
 	if (S_ISDIR(file->mode) && ft_findedot(f_name))
 		dir_sub(dir, new_dir(new_dir_name, sb.st_mtime, (long long)sb.st_size));
-	free(f_name);
-	free(dir_name);
-	free(new_dir_name);
+	free_new_file(f_name, dir_name, new_dir_name);
 	if (name != NULL && !(file->file_name = ft_strdup(name)))
 		malloc_err();
 	return (file);

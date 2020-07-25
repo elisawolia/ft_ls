@@ -12,7 +12,7 @@
 
 #include "ft_ls.h"
 
-void	print_filename(uint16_t color, char *line, t_file *tmp)
+void		print_filename(uint16_t color, char *line, t_file *tmp)
 {
 	char		*color_name;
 	char		*end_name;
@@ -84,7 +84,7 @@ static void	print_soft_link(t_file *file, int name)
 		ft_putspace(name - ft_strlen(file->file_name));
 }
 
-void	print_list_l(t_dir *dir, uint16_t color)
+void		print_list_l(t_dir *dir, uint16_t color)
 {
 	t_file *tmp;
 
