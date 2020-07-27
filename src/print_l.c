@@ -76,12 +76,10 @@ static void	print_rights(unsigned long mode)
 	ft_putchar(' ');
 }
 
-static void	print_soft_link(t_file *file, int name)
+static void	print_soft_link(t_file *file)
 {
 	if (S_ISLNK(file->mode))
 		ft_printf(" -> %s", file->soft_link);
-	else
-		ft_putspace(name - ft_strlen(file->file_name));
 }
 
 void	print_list_l(t_dir *dir, uint16_t color)
@@ -106,8 +104,8 @@ void	print_list_l(t_dir *dir, uint16_t color)
 		ft_printf("%d ", tmp->size);
 		ft_printf("%.12s ", ctime(&tmp->time) + 4);
 		print_filename(color, "%s", tmp);
-		print_soft_link(tmp, dir->max_name);
-		ft_putstr("\t\n");
+		print_soft_link(tmp);
+		ft_putstr("\n");
 		tmp = tmp->next;
 	}
 }

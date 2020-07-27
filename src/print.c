@@ -43,12 +43,20 @@ void	print_m(t_dir *dir, uint16_t color)
 	}
 }
 
-void	print_list_info(t_file *tmp, int max_name, uint16_t color)
+void	tabs(t_file *tmp, int max_name, int num, int to_step)
 {
-	print_filename(color, "%s", tmp);
-	ft_putspace((max_name) -
-		(long long int)ft_strlen(tmp->file_name));
-	ft_putchar('\t');
+	int col;
+	int col_last;
+
+	col = (long long int)ft_strlen(tmp->file_name);
+	col_last = col;
+	while (((col = col_last + 8) & ~7) <= ((max_name + 8) & ~7))
+	{
+		if (tmp->next == NULL || (num > to_step))
+			break ;
+		ft_putchar('\t');
+		col_last = col;
+	}
 }
 
 void	print_list(t_dir *dir, uint16_t color)
@@ -58,7 +66,6 @@ void	print_list(t_dir *dir, uint16_t color)
 	int		j;
 	t_file	*tmp;
 
-	tmp = dir->files;
 	rows = rows_print(dir);
 	i = 0;
 	j = 0;
@@ -69,7 +76,10 @@ void	print_list(t_dir *dir, uint16_t color)
 		while (tmp != NULL)
 		{
 			if (j % rows == i)
-				print_list_info(tmp, dir->max_name, color);
+			{
+				print_filename(color, "%s", tmp);
+				tabs(tmp, dir->max_name, i + j, count_files(dir->files) - rows);
+			}
 			j++;
 			tmp = tmp->next;
 		}

@@ -41,7 +41,10 @@ static void	add_files(char *file_name, t_dir **dir_files, t_opt **opt)
 	added = 0;
 	dir = opendir(".");
 	if (lstat(".", &sb) == -1)
-		lstat_error();
+	{
+		ft_printf_fd(2, "ls: %s: No such file or directory\n", file_name);
+		return ;
+	}
 	if (*dir_files == NULL)
 		*dir_files = new_dir(".", sb.st_mtime, (long long)sb.st_size);
 	(*dir_files)->file_added = 1;

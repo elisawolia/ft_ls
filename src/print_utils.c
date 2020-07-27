@@ -12,10 +12,6 @@
 
 #include "ft_ls.h"
 
-/*
-** col_width = ближайшей число кратное 8 (по табу)
-*/
-
 void	printing(t_dir *direct, t_opt **opt)
 {
 	if ((*opt)->rec == 1)
@@ -33,6 +29,10 @@ void	printing(t_dir *direct, t_opt **opt)
 	else
 		print_list(direct, (*opt)->g);
 }
+
+/*
+** col_width = ближайшей число кратное 8 (по табу)
+*/
 
 int		rows_print(t_dir *dir)
 {
