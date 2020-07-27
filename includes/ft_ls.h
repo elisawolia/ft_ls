@@ -175,6 +175,8 @@ void				printing_mult_dir(t_dir *direct, int i, int argc,
 										t_opt **opt);
 void				printing(t_dir *direct, t_opt **opt);
 void				print_r(t_dir *dir, t_opt **opt);
+void				dir_info(struct stat sb, t_file *file,
+									t_dir *dir, struct dirent *d);
 
 /*
 ** opt.c

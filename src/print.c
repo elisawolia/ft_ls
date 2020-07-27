@@ -78,7 +78,7 @@ void	print_list(t_dir *dir, uint16_t color)
 			if (j % rows == i)
 			{
 				print_filename(color, "%s", tmp);
-				tabs(tmp, dir->max_name, i + j, count_files(dir->files) - rows);
+				tabs(tmp, dir->max_name, j, count_files(dir->files) - rows);
 			}
 			j++;
 			tmp = tmp->next;

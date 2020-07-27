@@ -30,6 +30,12 @@ void		read_dir(char *dirname, t_opt **opt, t_dir *d)
 		free_dir(&direct);
 }
 
+static void	add_files_help(t_dir **dir_files, struct dirent	*d, int *added)
+{
+	file_add(&((*dir_files)->files), new_file(d, *dir_files, NULL));
+	*added = 1;
+}
+
 static void	add_files(char *file_name, t_dir **dir_files, t_opt **opt)
 {
 	struct dirent	*d;
@@ -40,25 +46,22 @@ static void	add_files(char *file_name, t_dir **dir_files, t_opt **opt)
 	d = NULL;
 	added = 0;
 	dir = opendir(".");
-	if (lstat(".", &sb) == -1)
+	if (lstat(".", &sb) != -1)
 	{
-		ft_printf_fd(2, "ls: %s: No such file or directory\n", file_name);
-		return ;
-	}
-	if (*dir_files == NULL)
-		*dir_files = new_dir(".", sb.st_mtime, (long long)sb.st_size);
-	(*dir_files)->file_added = 1;
-	while ((d = readdir(dir)) != NULL)
-	{
-		if (ft_strcmp(file_name, d->d_name) == 0)
+		if (*dir_files == NULL)
+			*dir_files = new_dir(".", sb.st_mtime, (long long)sb.st_size);
+		(*dir_files)->file_added = 1;
+		while ((d = readdir(dir)) != NULL)
 		{
-			file_add(&((*dir_files)->files), new_file(d, *dir_files, NULL));
-			added = 1;
+			if (ft_strcmp(file_name, d->d_name) == 0)
+				add_files_help(dir_files, d, &added);
 		}
+		if (added == 0)
+			ls_error(file_name);
+		sort_files(*opt, *dir_files);
 	}
-	if (added == 0)
-		ls_error(file_name);
-	sort_files(*opt, *dir_files);
+	else
+		ft_printf("ls: %s: No such file or directory\n", file_name);
 }
 
 void		read_mult_dirs(char **dirname, int i, int argc, t_opt **opt)

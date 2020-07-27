@@ -56,17 +56,16 @@ static void	file_info(struct stat sb, t_file *file)
 	file->next = NULL;
 }
 
-static void	dir_info(struct stat sb, t_file *file, t_dir *dir, struct dirent *d)
+static char	*get_file_name(char **dir_name, t_dir *dir, struct dirent *d)
 {
-	dir->total += (long long)sb.st_blocks;
-	dir->max_link = max(dir->max_link,
-							count_max(file->link));
-	dir->max_uid = max(dir->max_uid,
-							(int)ft_strlen(getpwuid(file->uid)->pw_name));
-	dir->max_gid = max(dir->max_gid,
-							(int)ft_strlen(getgrgid(file->gid)->gr_name));
-	dir->max_name = max(dir->max_name, (int)ft_strlen(d->d_name));
-	dir->max_size = max(dir->max_size, count_max(file->size));
+	char *f_name;
+
+	f_name = NULL;
+	if (!(*dir_name = ft_strjoin(dir->name, "/")))
+		malloc_err();
+	if (!(f_name = ft_strjoin(*dir_name, d->d_name)))
+		malloc_err();
+	return (f_name);
 }
 
 t_file		*new_file(struct dirent *d, t_dir *dir, char *name)
@@ -77,10 +76,7 @@ t_file		*new_file(struct dirent *d, t_dir *dir, char *name)
 	char		*new_dir_name;
 	struct stat	sb;
 
-	if (!(dir_name = ft_strjoin(dir->name, "/")))
-		malloc_err();
-	if (!(f_name = ft_strjoin(dir_name, d->d_name)))
-		malloc_err();
+	f_name = get_file_name(&dir_name, dir, d);
 	if (lstat(f_name, &sb) == -1)
 		lstat_error();
 	if (!(file = ft_memalloc(sizeof(t_file))))
