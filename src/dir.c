@@ -12,6 +12,10 @@
 
 #include "ft_ls.h"
 
+/*
+** creating a structure for storing directory information
+*/
+
 t_dir	*new_dir(char *name, time_t time, long long size)
 {
 	t_dir	*dir;
@@ -37,6 +41,10 @@ t_dir	*new_dir(char *name, time_t time, long long size)
 	return (dir);
 }
 
+/*
+** information about subdirectory
+*/
+
 void	dir_sub(t_dir *dir, t_dir *new)
 {
 	t_dir	*tmp;
@@ -54,6 +62,10 @@ void	dir_sub(t_dir *dir, t_dir *new)
 		tmp->next = new;
 	}
 }
+
+/*
+** move to the next directory in the structure
+*/
 
 void	dir_next(t_dir **alst, t_dir *new)
 {

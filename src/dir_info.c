@@ -12,6 +12,10 @@
 
 #include "ft_ls.h"
 
+/*
+** maximum file information size
+*/
+
 void	dir_info(struct stat sb, t_file *file, t_dir *dir, struct dirent *d)
 {
 	dir->total += (long long)sb.st_blocks;

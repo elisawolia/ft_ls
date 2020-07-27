@@ -12,6 +12,10 @@
 
 #include "ft_ls.h"
 
+/*
+** free clearing the directory structure
+*/
+
 void	free_dir(t_dir **dir)
 {
 	free((*dir)->name);
@@ -26,6 +30,10 @@ void	free_dir(t_dir **dir)
 	free(*dir);
 }
 
+/*
+** free clearing the file structure
+*/
+
 void	free_files(t_file **list)
 {
 	if ((*list)->file_name)
@@ -38,6 +46,10 @@ void	free_files(t_file **list)
 		free_files(&((*list)->next));
 	free(*list);
 }
+
+/*
+** free temp variable names for new files
+*/
 
 void	free_new_file(char *f_name, char *dir_name, char *new_dir_name)
 {

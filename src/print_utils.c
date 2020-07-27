@@ -12,6 +12,10 @@
 
 #include "ft_ls.h"
 
+/*
+** printing on screen lists
+*/
+
 void	printing(t_dir *direct, t_opt **opt)
 {
 	if ((*opt)->rec == 1)
@@ -31,7 +35,7 @@ void	printing(t_dir *direct, t_opt **opt)
 }
 
 /*
-** col_width = ближайшей число кратное 8 (по табу)
+** col_width = the nearest multiple of 8 (tab size)
 */
 
 int		rows_print(t_dir *dir)
