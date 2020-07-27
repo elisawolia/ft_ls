@@ -30,7 +30,7 @@ static void	printing_mult_dir_continue(t_dir **tmp, t_opt **opt)
 		print_list(*tmp, (*opt)->g);
 }
 
-void	printing_mult_dir(t_dir *direct, int i, int argc, t_opt **opt)
+void		printing_mult_dir(t_dir *direct, int i, int argc, t_opt **opt)
 {
 	t_dir	*tmp;
 

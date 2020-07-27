@@ -124,8 +124,10 @@ typedef	struct		s_dir
 */
 
 void				merge_sort(t_file **h, double (*f)(t_file *a, t_file *b));
-t_file				*sorted_merge(t_file *a, t_file *b, double (*f)(t_file *a, t_file *b));
-void				front_back_split(t_file *src, t_file **front, t_file **back);
+t_file				*sorted_merge(t_file *a, t_file *b,
+									double (*f)(t_file *a, t_file *b));
+void				front_back_split(t_file *src, t_file **front,
+										t_file **back);
 double				def_sort(t_file *a, t_file *b);
 double				time_sort(t_file *a, t_file *b);
 double				time_sort_sec(t_file *a, t_file *b);
@@ -136,9 +138,12 @@ void				reverse(t_file **lst);
 double				def_sort_dir(t_dir *a, t_dir *b);
 double				time_sort_dir(t_dir *a, t_dir *b);
 double				size_sort_dir(t_dir *a, t_dir *b);
-void				merge_sort_dir(t_dir **h, double (*f)(t_dir *a, t_dir *b), int flag);
-t_dir				*sorted_merge_dir(t_dir *a, t_dir *b, double (*f)(t_dir *a, t_dir *b), int flag);
-void				front_back_split_dir(t_dir *src, t_dir **front, t_dir **back, int flag);
+void				merge_sort_dir(t_dir **h, double (*f)(t_dir *a, t_dir *b),
+									int flag);
+t_dir				*sm_dir(t_dir *a, t_dir *b, double (*f)(t_dir *a, t_dir *b),
+								int flag);
+void				frontback_split_dir(t_dir *src, t_dir **front, t_dir **back,
+										int flag);
 void				reverse_dir_next(t_dir **lst);
 void				reverse_dir_sub(t_dir **lst);
 void				reverse_dir_mult(t_dir **lst);
@@ -166,7 +171,8 @@ void				print_m(t_dir *dir, uint16_t color);
 void				print_d(t_opt *opt, t_dir *dir);
 int					rows_print(t_dir *dir);
 
-void				printing_mult_dir(t_dir *direct, int i, int argc, t_opt **opt);
+void				printing_mult_dir(t_dir *direct, int i, int argc,
+										t_opt **opt);
 void				printing(t_dir *direct, t_opt **opt);
 void				print_r(t_dir *dir, t_opt **opt);
 
@@ -186,5 +192,7 @@ void				lstat_error(void);
 char				*get_color(unsigned long mode);
 char				*get_color_type(unsigned long mode);
 void				print_filename(uint16_t color, char *line, t_file *tmp);
+void				free_new_file(char *f_name, char *dir_name,
+									char *new_dir_name);
 
 #endif

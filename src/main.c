@@ -12,7 +12,7 @@
 
 #include "ft_ls.h"
 
-void	read_dir(char *dirname, t_opt **opt, t_dir *d)
+void		read_dir(char *dirname, t_opt **opt, t_dir *d)
 {
 	t_dir	*direct;
 	DIR		*dir;
@@ -61,7 +61,7 @@ static void	add_files(char *file_name, t_dir **dir_files, t_opt **opt)
 	sort_files(*opt, *dir_files);
 }
 
-void	read_mult_dirs(char **dirname, int i, int argc, t_opt **opt)
+void		read_mult_dirs(char **dirname, int i, int argc, t_opt **opt)
 {
 	t_dir	*direct;
 	t_dir	*dir_files;
@@ -97,7 +97,7 @@ void	read_mult_dirs(char **dirname, int i, int argc, t_opt **opt)
 ** t++;
 */
 
-int		main(int argc, char **argv)
+int			main(int argc, char **argv)
 {
 	t_opt	*opt;
 	char	*dirname;
