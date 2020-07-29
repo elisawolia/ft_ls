@@ -15,7 +15,7 @@
 void	printing(t_dir *direct, t_opt **opt)
 {
 	if ((*opt)->rec == 1)
-		print_r(direct, opt);
+		print_r(direct, opt, 0);
 	else if ((*opt)->l == 1)
 	{
 		if (!(*opt)->d)

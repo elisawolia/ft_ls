@@ -55,6 +55,7 @@ typedef	struct		s_opt
 	uint16_t		s;
 	uint16_t		t;
 	uint16_t		g;
+	int				r_output;
 }					t_opt;
 
 /*
@@ -174,7 +175,7 @@ int					rows_print(t_dir *dir);
 void				printing_mult_dir(t_dir *direct, int i, int argc,
 										t_opt **opt);
 void				printing(t_dir *direct, t_opt **opt);
-void				print_r(t_dir *dir, t_opt **opt);
+void				print_r(t_dir *dir, t_opt **opt, int num_mult);
 void				dir_info(struct stat sb, t_file *file,
 									t_dir *dir, struct dirent *d);
 
