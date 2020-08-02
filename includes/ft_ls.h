@@ -56,6 +56,7 @@ typedef	struct		s_opt
 	uint16_t		t;
 	uint16_t		g;
 	int				r_output;
+	int				err;
 }					t_opt;
 
 /*
