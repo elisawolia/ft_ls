@@ -38,8 +38,6 @@ LIB_HEADERS =  -I $(LIB_DIR)includes -I $(PRINTF_DIR)includes
 CFLAGS = -c -Wall -Werror -Wextra
 LIB = -L . $(LIBFT_A) -lft -L . $(FT_PRINTF_A) -lft
 
-.PHONY: all clean fclean re
-
 all: do_lib $(NAME)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
@@ -47,7 +45,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
 
 $(NAME): $(OBJS)
-	@$(CC) $(OBJS) $(LIB) -o $@
+	@$(CC) $(OBJS) $(LIB) -o $(NAME)
 	@echo "\033[92m ------- $(NAME) built and ready ------- \033[0m"
 
 do_lib:
@@ -66,3 +64,5 @@ fclean: clean
 	@echo "\033[92m ------- $(NAME) fcleaned ------- \033[0m"
 
 re: fclean all
+
+.PHONY: all clean fclean re

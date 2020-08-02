@@ -13,7 +13,7 @@
 #include "ft_ls.h"
 
 static void	printing_mult_dir_continue(t_dir **tmp, t_opt **opt)
-{
+{ 
 	if ((*opt)->rec == 1)
 		print_r(*tmp, opt);
 	else if ((*opt)->l == 1)
@@ -45,7 +45,8 @@ void		printing_mult_dir(t_dir *direct, int i, int argc, t_opt **opt)
 		if ((*opt)->rec == 0 && argc != i + 1 && tmp->file_added == 0)
 			ft_printf("%s:\n", tmp->name);
 		printing_mult_dir_continue(&tmp, opt);
-		if (tmp->mult != NULL)
+		//  эта конструкция сеет хаус в вывод ошибок
+		if (tmp->mult != NULL) 
 			ft_putchar('\n');
 		tmp = tmp->mult;
 	}

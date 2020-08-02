@@ -104,7 +104,7 @@ $(NAME): $(HEADERS) $(OBJ_DIR) $(OBJ)
 $(OBJ_DIR):
 	@mkdir obj
 
-$(OBJ_DIR)%.o: $(SRC_DIR)%.c $(HEADER) Makefile
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c $(HEADER)
 	@gcc $(FLAG) -I $(INC_DIR) -c $< -o $@
 
 clean:
