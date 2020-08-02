@@ -33,6 +33,7 @@ t_opt		*malloc_opt(void)
 	opt->c = 0;
 	opt->s = 0;
 	opt->g = 0;
+	opt->r_output = 0;
 	return (opt);
 }
 

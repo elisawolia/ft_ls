@@ -35,13 +35,15 @@ static void	sorting_dir_r(t_dir *dir, t_opt **opt)
 	}
 }
 
-void		print_r(t_dir *dir, t_opt **opt)
+void		print_r(t_dir *dir, t_opt **opt, int num_mult)
 {
-	if (ft_strcmp(dir->name, "."))
+	if ((*opt)->r_output == 1 || num_mult > 1)
 	{
-		ft_putchar('\n');
+		if ((*opt)->r_output == 1)
+			ft_putchar('\n');
 		ft_printf("%s:\n", dir->name);
 	}
+	(*opt)->r_output = 1;
 	if ((*opt)->l == 1)
 	{
 		if (dir->total != 0)
