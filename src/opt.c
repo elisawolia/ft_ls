@@ -12,6 +12,10 @@
 
 #include "ft_ls.h"
 
+/*
+** function allocate memory for main structure of project
+*/
+
 t_opt		*malloc_opt(void)
 {
 	t_opt *opt;
@@ -33,6 +37,10 @@ t_opt		*malloc_opt(void)
 	return (opt);
 }
 
+/*
+** processing of entered options 3 of 3
+*/
+
 static void	opt_check_continue_next(char str, t_opt *opt)
 {
 	if (str == 'd')
@@ -43,6 +51,10 @@ static void	opt_check_continue_next(char str, t_opt *opt)
 	if (str == 'G')
 		opt->g = 1;
 }
+
+/*
+** processing of entered options 2 of 3
+*/
 
 static void	opt_check_continue(char str, t_opt *opt)
 {
@@ -68,6 +80,10 @@ static void	opt_check_continue(char str, t_opt *opt)
 	}
 	opt_check_continue_next(str, opt);
 }
+
+/*
+** processing of entered options 1 of 3
+*/
 
 static void	opt_check(char str, t_opt *opt)
 {
@@ -95,6 +111,10 @@ static void	opt_check(char str, t_opt *opt)
 	}
 	opt_check_continue(str, opt);
 }
+
+/*
+** read options that are passed to the program
+*/
 
 void		read_opt(char *str, t_opt **opt)
 {

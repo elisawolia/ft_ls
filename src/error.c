@@ -12,17 +12,29 @@
 
 #include "ft_ls.h"
 
+/*
+** error if lstat can't get info
+*/
+
 void	lstat_error(void)
 {
 	perror("lstat");
 	exit(1);
 }
 
+/*
+** error if program can't find file or directory
+*/
+
 void	ls_error(char *file)
 {
 	ft_printf_fd(2, "ls: %s: No such file or directory\n", file);
-	exit(1);
+	//exit(1);
 }
+
+/*
+** malloc error handling
+*/
 
 void	malloc_err(void)
 {

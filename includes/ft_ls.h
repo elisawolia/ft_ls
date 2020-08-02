@@ -121,81 +121,161 @@ typedef	struct		s_dir
 }					t_dir;
 
 /*
-**	Sorting functions
+** coloristica.c
 */
 
-void				merge_sort(t_file **h, double (*f)(t_file *a, t_file *b));
-t_file				*sorted_merge(t_file *a, t_file *b,
-									double (*f)(t_file *a, t_file *b));
-void				front_back_split(t_file *src, t_file **front,
-										t_file **back);
-double				def_sort(t_file *a, t_file *b);
-double				time_sort(t_file *a, t_file *b);
-double				time_sort_sec(t_file *a, t_file *b);
-double				time_sort_nsec(t_file *a, t_file *b);
-double				size_sort(t_file *a, t_file *b);
-void				reverse(t_file **lst);
+char				*get_color_type(unsigned long mode);
+char				*get_color(unsigned long mode);
 
-double				def_sort_dir(t_dir *a, t_dir *b);
-double				time_sort_dir(t_dir *a, t_dir *b);
-double				size_sort_dir(t_dir *a, t_dir *b);
+/*
+** dir.c
+*/
+
+t_dir				*new_dir(char *name, time_t time, long long size);
+void				dir_sub(t_dir *dir, t_dir *new);
+void				dir_next(t_dir **alst, t_dir *new);
+void				sort_files(t_opt *opt, t_dir *direct);
+t_dir				*init_dir(DIR *dir, t_opt *opt, char *name, t_dir *di);
+
+/*
+** dir_info.c
+*/
+
+void				dir_info(struct stat sb, t_file *file,
+									t_dir *dir, struct dirent *d);
+
+/*
+** error.c
+*/
+
+void				lstat_error(void);
+void				ls_error(char *file);
+void				malloc_err(void);
+
+/*
+** file.c
+*/
+
+void				file_add(t_file **alst, t_file *new);
+t_file				*new_file(struct dirent *d, t_dir *dir, char *name);
+
+/*
+** free.c
+*/
+
+void				free_dir(t_dir **dir);
+void				free_files(t_file **list);
+void				free_new_file(char *f_name, char *dir_name,
+									char *new_dir_name);
+
+/*
+** main.c
+*/
+
+void				read_dir(char *dirname, t_opt **opt, t_dir *d);
+
+/*
+** opt.c
+*/
+
+t_opt				*malloc_opt(void);
+void				read_opt(char *str, t_opt **opt);
+
+/*
+** order_dir.c
+*/
+
 void				merge_sort_dir(t_dir **h, double (*f)(t_dir *a, t_dir *b),
 									int flag);
 t_dir				*sm_dir(t_dir *a, t_dir *b, double (*f)(t_dir *a, t_dir *b),
 								int flag);
 void				frontback_split_dir(t_dir *src, t_dir **front, t_dir **back,
 										int flag);
+
+/*
+** order_dir_reverse.c
+*/
+
 void				reverse_dir_next(t_dir **lst);
-void				reverse_dir_sub(t_dir **lst);
 void				reverse_dir_mult(t_dir **lst);
+void				reverse_dir_sub(t_dir **lst);
 
-void				read_dir(char *dirname, t_opt **opt, t_dir *d);
+/*
+** order_files.c
+*/
 
-int					count_max(long long n);
-int					ft_findedot(char *name);
-int					count_files(t_file *file);
-void				ft_putspace(ssize_t n);
-ssize_t				max(ssize_t a, ssize_t b);
+void				reverse(t_file **lst);
+void				merge_sort(t_file **h, double (*f)(t_file *a, t_file *b));
+t_file				*sorted_merge(t_file *a, t_file *b,
+									double (*f)(t_file *a, t_file *b));
+void				front_back_split(t_file *src, t_file **front,
+										t_file **back);
 
-t_file				*new_file(struct dirent *d, t_dir *dir, char *name);
-void				file_add(t_file **alst, t_file *new);
-t_dir				*init_dir(DIR *dir, t_opt *opt, char *name, t_dir *di);
-void				dir_sub(t_dir *dir, t_dir *new);
-void				dir_next(t_dir **alst, t_dir *new);
-t_dir				*new_dir(char *name, time_t time, long long size);
-void				sort_files(t_opt *opt, t_dir *direct);
+/*
+** ordering_dir_cond.c
+*/
 
-void				print_list(t_dir *dir, uint16_t color);
-void				print_list_l(t_dir *dir, uint16_t color);
-void				print_one(t_dir *dir, uint16_t color);
+double				def_sort_dir(t_dir *a, t_dir *b);
+double				time_sort_dir(t_dir *a, t_dir *b);
+double				size_sort_dir(t_dir *a, t_dir *b);
+
+/*
+** ordering_file_cond.c
+*/
+
+double				def_sort(t_file *a, t_file *b);
+double				time_sort(t_file *a, t_file *b);
+double				time_sort_sec(t_file *a, t_file *b);
+double				time_sort_nsec(t_file *a, t_file *b);
+double				size_sort(t_file *a, t_file *b);
+
+/*
+** print.c
+*/
+
 void				print_m(t_dir *dir, uint16_t color);
+void				print_list(t_dir *dir, uint16_t color);
+void				print_one(t_dir *dir, uint16_t color);
 void				print_d(t_opt *opt, t_dir *dir);
-int					rows_print(t_dir *dir);
+
+/*
+** print_l.c
+*/
+
+void				print_filename(uint16_t color, char *line, t_file *tmp);
+void				print_list_l(t_dir *dir, uint16_t color);
+
+/*
+** print_mult.c
+*/
 
 void				printing_mult_dir(t_dir *direct, int i, int argc,
 										t_opt **opt);
+
+/*
+** print_r.c
+*/
+
 void				printing(t_dir *direct, t_opt **opt);
 void				print_r(t_dir *dir, t_opt **opt, int num_mult);
 void				dir_info(struct stat sb, t_file *file,
 									t_dir *dir, struct dirent *d);
 
 /*
-** opt.c
+** print_utils.c
 */
 
-void				read_opt(char *str, t_opt **opt);
-t_opt				*malloc_opt(void);
+void				printing(t_dir *direct, t_opt **opt);
+int					rows_print(t_dir *dir);
 
-void				free_files(t_file **list);
-void				free_dir(t_dir **dir);
-void				malloc_err(void);
-void				ls_error(char *file);
-void				lstat_error(void);
+/*
+** utils.c
+*/
 
-char				*get_color(unsigned long mode);
-char				*get_color_type(unsigned long mode);
-void				print_filename(uint16_t color, char *line, t_file *tmp);
-void				free_new_file(char *f_name, char *dir_name,
-									char *new_dir_name);
+int					count_max(long long n);
+void				ft_putspace(ssize_t n);
+int					ft_findedot(char *name);
+int					count_files(t_file *file);
+ssize_t				max(ssize_t a, ssize_t b);
 
 #endif

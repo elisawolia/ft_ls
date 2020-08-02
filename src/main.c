@@ -64,7 +64,7 @@ static void	add_files(char *file_name, t_dir **dir_files, t_opt **opt)
 		ft_printf("ls: %s: No such file or directory\n", file_name);
 }
 
-void		read_mult_dirs(char **dirname, int i, int argc, t_opt **opt)
+static void	read_mult_dirs(char **dirname, int i, int argc, t_opt **opt)
 {
 	t_dir	*direct;
 	t_dir	*dir_files;
@@ -94,10 +94,8 @@ void		read_mult_dirs(char **dirname, int i, int argc, t_opt **opt)
 }
 
 /*
-** Добавить в конце
-** int t = 0;
-** while (1)
-** t++;
+** Main function of ft_ls which shows files and
+** folders in a specific or specified directory
 */
 
 int			main(int argc, char **argv)
