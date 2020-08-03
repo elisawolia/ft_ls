@@ -50,7 +50,7 @@ char	*get_color_type(unsigned long mode)
 			color = ft_strjoin("{BLACK}", "{BGYELLOW}") : 0;
 		}
 		else
-			color = ft_strdup("{BCYAN}");
+			color = ft_strdup("{BLUE}");
 	}
 	return (color);
 }

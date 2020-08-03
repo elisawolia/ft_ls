@@ -166,8 +166,8 @@ t_file				*new_file(struct dirent *d, t_dir *dir, char *name);
 
 void				free_dir(t_dir **dir);
 void				free_files(t_file **list);
-void				free_new_file(char *f_name, char *dir_name,
-									char *new_dir_name);
+void				free_new_file(char **f_name, char **dir_name,
+									char **new_dir_name);
 
 /*
 ** main.c

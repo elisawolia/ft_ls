@@ -64,6 +64,7 @@ static void	add_files(char *file_name, t_dir **dir_files, t_opt **opt)
 		}
 		sort_files(*opt, *dir_files);
 	}
+	closedir(dir);
 }
 
 static void	read_mult_dirs(char **dirname, int i, int argc, t_opt **opt)
@@ -81,7 +82,11 @@ static void	read_mult_dirs(char **dirname, int i, int argc, t_opt **opt)
 		if (!(dir = opendir(dirname[j])))
 			add_files(dirname[j], &dir_files, opt);
 		else
+		{
 			dir_next(&direct, init_dir(dir, *opt, dirname[j], NULL));
+			if (dir)
+				closedir(dir);
+		}
 		j++;
 	}
 	merge_sort_dir(&direct, &def_sort_dir, 0);
@@ -93,6 +98,8 @@ static void	read_mult_dirs(char **dirname, int i, int argc, t_opt **opt)
 		reverse_dir_mult(&direct);
 	dir_next(&direct, dir_files);
 	printing_mult_dir(direct, i, argc, opt);
+	if (direct)
+		free_dir(&direct);
 }
 
 /*
@@ -123,5 +130,6 @@ int			main(int argc, char **argv)
 		read_mult_dirs(argv, i, argc, &opt);
 	free(opt);
 	free(dirname);
+	scanf("%i",&i);
 	return (0);
 }

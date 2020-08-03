@@ -18,7 +18,7 @@ static void	printing_mult_dir_continue(t_dir **tmp, t_opt **opt, int num_mult)
 		print_r(*tmp, opt, num_mult);
 	else if ((*opt)->l == 1)
 	{
-		if ((*tmp)->file_added == 0)
+		if ((*tmp)->file_added == 0 && (*opt)->err == 0)
 			ft_printf("total %lld\n", (*tmp)->total);
 		print_list_l(*tmp, (*opt)->g);
 	}

@@ -100,10 +100,40 @@ void	print_one(t_dir *dir, uint16_t color)
 	}
 }
 
+void	free_next_file(t_file **files) {
+	t_file *tmp;
+	t_file *tmp_next;
+
+	tmp = *files;
+	tmp_next = *files;
+	while ((tmp_next = tmp_next->next) != NULL)
+	{
+		tmp->next = NULL;
+		tmp = tmp_next;
+	}
+}
+
+void	free_d(t_dir **dir)
+{
+	t_file	*files;
+	t_file	*fast_file;
+
+	files = (*dir)->files;
+	free((*dir)->name);
+	free(*dir);
+	while(files != NULL)
+	{
+		fast_file = files->next;
+		files->next = NULL;
+		files = fast_file;
+	}
+}
+
 void	print_d(t_opt *opt, t_dir *dir)
 {
 	t_file	*files;
 	t_dir	*tmp;
+	t_dir	*temp_dir;
 
 	tmp = dir;
 	files = NULL;
@@ -112,18 +142,22 @@ void	print_d(t_opt *opt, t_dir *dir)
 		file_add(&(files), tmp->files);
 		tmp = tmp->mult;
 	}
-	dir->files = files;
-	merge_sort(&(dir->files), &def_sort);
+	if (!(temp_dir = new_dir("", 0, 0)))
+		return ;
+	temp_dir->files = files;
+	merge_sort(&(temp_dir->files), &def_sort);
 	if (opt->t)
-		merge_sort(&(dir->files), &time_sort);
+		merge_sort(&(temp_dir->files), &time_sort);
 	if (opt->s)
-		merge_sort(&(dir->files), &size_sort);
+		merge_sort(&(temp_dir->files), &size_sort);
 	if (opt->r)
-		reverse(&(dir->files));
+		reverse(&(temp_dir->files));
 	if (opt->l == 1)
-		print_list_l(dir, opt->g);
+		print_list_l(temp_dir, opt->g);
 	else if (opt->one == 1)
-		print_one(dir, opt->g);
+		print_one(temp_dir, opt->g);
 	else
-		print_list(dir, opt->g);
+		print_list(temp_dir, opt->g);
+	free_d(&temp_dir);
+
 }

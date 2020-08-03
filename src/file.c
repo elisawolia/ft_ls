@@ -90,7 +90,9 @@ t_file		*new_file(struct dirent *d, t_dir *dir, char *name)
 	dir_info(sb, file, dir, d);
 	if (S_ISDIR(file->mode) && ft_findedot(f_name))
 		dir_sub(dir, new_dir(new_dir_name, sb.st_mtime, (long long)sb.st_size));
-	free_new_file(f_name, dir_name, new_dir_name);
+	free_new_file(&f_name, &dir_name, &new_dir_name);
+	if (name != NULL && file->file_name != NULL)
+		free(file->file_name);
 	if (name != NULL && !(file->file_name = ft_strdup(name)))
 		malloc_err();
 	return (file);

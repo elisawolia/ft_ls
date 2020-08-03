@@ -19,6 +19,7 @@
 void	free_dir(t_dir **dir)
 {
 	free((*dir)->name);
+	(*dir)->name = NULL;
 	if ((*dir)->files)
 		free_files(&((*dir)->files));
 	if ((*dir)->sub)
@@ -28,6 +29,7 @@ void	free_dir(t_dir **dir)
 	if ((*dir)->mult)
 		free_dir(&((*dir)->mult));
 	free(*dir);
+	*dir = NULL;
 }
 
 /*
@@ -39,21 +41,23 @@ void	free_files(t_file **list)
 	if ((*list)->file_name)
 	{
 		free((*list)->file_name);
+		(*list)->file_name = NULL;
 		if ((*list)->soft_link != NULL)
 			free((*list)->soft_link);
 	}
 	if ((*list)->next)
 		free_files(&((*list)->next));
 	free(*list);
+	*list = NULL;
 }
 
 /*
 ** free temp variable names for new files
 */
 
-void	free_new_file(char *f_name, char *dir_name, char *new_dir_name)
+void	free_new_file(char **f_name, char **dir_name, char **new_dir_name)
 {
-	free(f_name);
-	free(dir_name);
-	free(new_dir_name);
+	free(*f_name);
+	free(*dir_name);
+	free(*new_dir_name);
 }
