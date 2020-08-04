@@ -12,7 +12,7 @@
 
 #include "ft_ls.h"
 
-void		read_dir(char *dirname, t_opt **opt, t_dir *d)
+void		read_dir(char *dirname, t_opt **opt, t_dir *d, int del_r)
 {
 	t_dir	*direct;
 	DIR		*dir;
@@ -26,14 +26,16 @@ void		read_dir(char *dirname, t_opt **opt, t_dir *d)
 	direct = init_dir(dir, *opt, dirname, d);
 	closedir(dir);
 	printing(direct, opt);
-	if ((*opt)->rec != 1 || (!direct->next && !direct->sub && !direct->mult))
+	if ((*opt)->rec != 1)
+		free_dir(&direct);
+	if ((*opt)->rec == 1 && del_r == 1)
 		free_dir(&direct);
 }
 
 static void	add_files_help(t_dir **dir_files, struct dirent	*d,
 												int *added)
 {
-	file_add(&((*dir_files)->files), new_file(d, *dir_files, NULL));
+	file_add(&((*dir_files)->files), new_file(d, *dir_files, NULL, 0));
 	*added = 1;
 	(*dir_files)->file_added = 1;
 }
@@ -125,11 +127,10 @@ int			main(int argc, char **argv)
 		i++;
 	}
 	if (i == argc)
-		read_dir(dirname, &opt, NULL);
+		read_dir(dirname, &opt, NULL, 1);
 	else
 		read_mult_dirs(argv, i, argc, &opt);
 	free(opt);
 	free(dirname);
-	scanf("%i",&i);
 	return (0);
 }

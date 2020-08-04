@@ -82,6 +82,7 @@ typedef struct		s_file
 	time_t			time;
 	long			sec;
 	long			nsec;
+	int				added_d;
 	struct s_file	*next;
 }					t_file;
 
@@ -158,7 +159,9 @@ void				malloc_err(void);
 */
 
 void				file_add(t_file **alst, t_file *new);
-t_file				*new_file(struct dirent *d, t_dir *dir, char *name);
+void				file_add_full(t_file **alst, t_file *new);
+t_file				*new_file(struct dirent *d, t_dir *dir,
+										char *name, int added_d);
 
 /*
 ** free.c
@@ -173,7 +176,7 @@ void				free_new_file(char **f_name, char **dir_name,
 ** main.c
 */
 
-void				read_dir(char *dirname, t_opt **opt, t_dir *d);
+void				read_dir(char *dirname, t_opt **opt, t_dir *d, int del_r);
 
 /*
 ** opt.c

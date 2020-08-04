@@ -107,13 +107,13 @@ t_dir	*init_dir(DIR *dir, t_opt *opt, char *name, t_dir *di)
 		{
 			if (!ft_strcmp(d->d_name, "."))
 			{
-				file_add(&(direct->files), new_file(d, direct, name));
+				file_add(&(direct->files), new_file(d, direct, name, 1));
 				break ;
 			}
 			continue;
 		}
 		if ((d->d_name[0] != '.' && !opt->a) || opt->a)
-			file_add(&(direct->files), new_file(d, direct, NULL));
+			file_add(&(direct->files), new_file(d, direct, NULL, 0));
 	}
 	sort_files(opt, direct);
 	return (direct);

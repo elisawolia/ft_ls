@@ -41,7 +41,8 @@ void		print_r(t_dir *dir, t_opt **opt, int num_mult)
 	{
 		if ((*opt)->r_output == 1)
 			ft_putchar('\n');
-		ft_printf("%s:\n", dir->name);
+		if (dir->file_added == 0)
+			ft_printf("%s:\n", dir->name);
 	}
 	(*opt)->r_output = 1;
 	if ((*opt)->l == 1)
@@ -56,7 +57,7 @@ void		print_r(t_dir *dir, t_opt **opt, int num_mult)
 		print_list(dir, (*opt)->g);
 	sorting_dir_r(dir, opt);
 	if (dir->sub)
-		read_dir(dir->sub->name, opt, dir->sub);
+		read_dir(dir->sub->name, opt, dir->sub, 0);
 	if (dir->next)
-		read_dir(dir->next->name, opt, dir->next);
+		read_dir(dir->next->name, opt, dir->next, 0);
 }
