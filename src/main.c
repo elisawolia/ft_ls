@@ -91,13 +91,7 @@ static void	read_mult_dirs(char **dirname, int i, int argc, t_opt **opt)
 		}
 		j++;
 	}
-	merge_sort_dir(&direct, &def_sort_dir, 0);
-	if ((*opt)->s)
-		merge_sort_dir(&direct, &size_sort_dir, 0);
-	else if ((*opt)->t)
-		merge_sort_dir(&direct, &time_sort_dir, 0);
-	if ((*opt)->r)
-		reverse_dir_mult(&direct);
+	sort_mult_dirs(&direct, opt);
 	dir_next(&direct, dir_files);
 	printing_mult_dir(direct, i, argc, opt);
 	if (direct)

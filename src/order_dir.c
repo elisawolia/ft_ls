@@ -12,6 +12,17 @@
 
 #include "ft_ls.h"
 
+void	sort_mult_dirs(t_dir **direct, t_opt **opt)
+{
+	merge_sort_dir(direct, &def_sort_dir, 0);
+	if ((*opt)->s)
+		merge_sort_dir(direct, &size_sort_dir, 0);
+	else if ((*opt)->t)
+		merge_sort_dir(direct, &time_sort_dir, 0);
+	if ((*opt)->r)
+		reverse_dir_mult(direct);
+}
+
 void	merge_sort_dir(t_dir **h, double (*f)(t_dir *a, t_dir *b), int flag)
 {
 	t_dir	*head;

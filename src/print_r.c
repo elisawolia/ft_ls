@@ -47,7 +47,7 @@ void		print_r(t_dir *dir, t_opt **opt, int num_mult)
 	(*opt)->r_output = 1;
 	if ((*opt)->l == 1)
 	{
-		if (dir->total != 0)
+		if (dir->files != NULL)
 			ft_printf("total %lld\n", dir->total);
 		print_list_l(dir, (*opt)->g);
 	}

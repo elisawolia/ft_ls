@@ -189,6 +189,7 @@ void				read_opt(char *str, t_opt **opt);
 ** order_dir.c
 */
 
+void				sort_mult_dirs(t_dir **direct, t_opt **opt);
 void				merge_sort_dir(t_dir **h, double (*f)(t_dir *a, t_dir *b),
 									int flag);
 t_dir				*sm_dir(t_dir *a, t_dir *b, double (*f)(t_dir *a, t_dir *b),
