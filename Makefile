@@ -13,7 +13,29 @@
 NAME = ft_ls
 
 # files
-SRC	= main.c dir.c file.c dir_info.c print_d.c utils.c order_files.c file_add.c print.c print_r.c print_l.c print_utils.c print_mult.c opt.c ordering_file_cond.c ordering_dir_cond.c order_dir.c free.c error.c coloristica.c order_dir_reverse.c
+SRC	=	main.c\
+		dir.c\
+		file.c\
+		dir_info.c\
+		read_mult.c\
+		print_d.c\
+		utils.c\
+		order_files.c\
+		file_add.c\
+		print.c\
+		print_r.c\
+		print_l.c\
+		print_utils.c\
+		print_mult.c\
+		opt.c\
+		ordering_file_cond.c\
+		ordering_dir_cond.c\
+		order_dir.c\
+		free.c\
+		error.c\
+		coloristica.c\
+		order_dir_reverse.c
+
 OBJ = $(SRC:.c=.o)
 
 LIBFT_A = libft.a
@@ -36,7 +58,7 @@ CC = gcc
 HEADERS = -I includes
 LIB_HEADERS =  -I $(LIB_DIR)includes -I $(PRINTF_DIR)includes
 CFLAGS = -c -Wall -Werror -Wextra
-LIB = -L . $(LIBFT_A) -lft -L . $(FT_PRINTF_A) -lft
+LIB = -L $(LIB_DIR) -lft -L $(PRINTF_DIR) -lftprintf
 
 all: do_lib $(NAME)
 
@@ -50,11 +72,9 @@ $(NAME): $(OBJS)
 
 do_lib:
 	@make -C $(PRINTF_DIR)
-	@cp $(LIB_DIR)$(LIBFT_A) .
-	@cp $(PRINTF_DIR)$(FT_PRINTF_A) .
 
 clean:
-	@/bin/rm -rf $(OBJ_DIR) $(LIBFT_A) $(FT_PRINTF_A)
+	@/bin/rm -rf $(OBJ_DIR)
 	@make -C $(PRINTF_DIR) clean
 	@echo "\033[92m ------- $(NAME) cleaned ------- \033[0m"
 
