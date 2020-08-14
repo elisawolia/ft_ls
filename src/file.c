@@ -72,7 +72,7 @@ t_file		*new_file(struct dirent *d, t_dir *dir, char *name, int added_d)
 	t_file		*file;
 	char		*f_name;
 	char		*dir_name;
-	char		*new_dir_name;
+	char		*n_d_na;
 	struct stat	sb;
 
 	f_name = get_file_name(&dir_name, dir, d);
@@ -82,14 +82,14 @@ t_file		*new_file(struct dirent *d, t_dir *dir, char *name, int added_d)
 		malloc_err();
 	if (!(file->file_name = ft_strdup(d->d_name)))
 		malloc_err();
-	if (!(new_dir_name = ft_strjoin(dir_name, file->file_name)))
+	if (!(n_d_na = ft_strjoin(dir_name, file->file_name)))
 		malloc_err();
 	file_info(sb, file, added_d);
 	soft_link(sb, file, f_name);
 	dir_info(sb, file, dir, d);
 	if (S_ISDIR(file->mode) && ft_findedot(f_name))
-		dir_sub(dir, new_dir(new_dir_name, sb.st_mtime, (long long)sb.st_size));
-	free_new_file(&f_name, &dir_name, &new_dir_name);
+		dir_sub(dir, new_dir(n_d_na, sb.st_mtime, sb.st_size, sb.st_mtimespec));
+	free_new_file(&f_name, &dir_name, &n_d_na);
 	free_file_name(name, file);
 	if (name != NULL && !(file->file_name = ft_strdup(name)))
 		malloc_err();

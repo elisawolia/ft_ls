@@ -68,7 +68,7 @@ void		print_d(t_opt *opt, t_dir *dir)
 		file_add_full(&(files), tmp->files);
 		tmp = tmp->mult;
 	}
-	if (!(temp_dir = new_dir("", 0, 0)))
+	if (!(temp_dir = new_dir("", 0, 0, (struct timespec){0})))
 		return ;
 	temp_dir->files = files;
 	check_files(temp_dir);

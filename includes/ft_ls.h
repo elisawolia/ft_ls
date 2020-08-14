@@ -116,6 +116,8 @@ typedef	struct		s_dir
 	long long		total;
 	long long		size;
 	time_t			time;
+	long			sec;
+	long			nsec;
 	struct s_file	*files;
 	struct s_dir	*sub;
 	struct s_dir	*next;
@@ -133,7 +135,8 @@ char				*get_color(unsigned long mode);
 ** dir.c
 */
 
-t_dir				*new_dir(char *name, time_t time, long long size);
+t_dir				*new_dir(char *name, time_t time, long long size,
+												struct timespec st_mtimespec);
 void				dir_sub(t_dir *dir, t_dir *new);
 void				dir_next(t_dir **alst, t_dir *new);
 void				sort_files(t_opt *opt, t_dir *direct);
@@ -153,6 +156,7 @@ void				dir_info(struct stat sb, t_file *file,
 void				lstat_error(void);
 void				ls_error(char *file);
 void				malloc_err(void);
+void				err_help(t_opt *opt, char *file_name);
 
 /*
 ** file.c
@@ -176,7 +180,7 @@ void				free_new_file(char **f_name, char **dir_name,
 ** main.c
 */
 
-void				read_dir(char *dirname, t_opt **opt, t_dir *d, int del_r);
+int					read_dir(char *dirname, t_opt **opt, t_dir *d, int del_r);
 
 /*
 ** opt.c
@@ -221,6 +225,8 @@ void				front_back_split(t_file *src, t_file **front,
 */
 
 double				def_sort_dir(t_dir *a, t_dir *b);
+double				sort_sec_dir(t_dir *a, t_dir *b);
+double				sort_nsec_dir(t_dir *a, t_dir *b);
 double				time_sort_dir(t_dir *a, t_dir *b);
 double				size_sort_dir(t_dir *a, t_dir *b);
 
@@ -282,5 +288,13 @@ void				ft_putspace(ssize_t n);
 int					ft_findedot(char *name);
 int					count_files(t_file *file);
 ssize_t				max(ssize_t a, ssize_t b);
+
+/*
+** read_mult.c
+*/
+
+void				treat_as_dir(char *name);
+void				treat_as_file(char *file_name, t_dir **dir_files,
+																t_opt **opt);
 
 #endif

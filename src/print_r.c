@@ -18,6 +18,10 @@ static void	sorting_dir_r(t_dir *dir, t_opt **opt)
 	merge_sort_dir(&(dir->next), &def_sort_dir, 1);
 	if ((*opt)->t)
 	{
+		merge_sort_dir(&(dir->sub), &sort_nsec_dir, 1);
+		merge_sort_dir(&(dir->next), &sort_nsec_dir, 1);
+		merge_sort_dir(&(dir->sub), &sort_sec_dir, 1);
+		merge_sort_dir(&(dir->next), &sort_sec_dir, 1);
 		merge_sort_dir(&(dir->sub), &time_sort_dir, 1);
 		merge_sort_dir(&(dir->next), &time_sort_dir, 1);
 	}
@@ -56,8 +60,10 @@ void		print_r(t_dir *dir, t_opt **opt, int num_mult)
 	else
 		print_list(dir, (*opt)->g);
 	sorting_dir_r(dir, opt);
-	if (dir->sub)
-		read_dir(dir->sub->name, opt, dir->sub, 0);
-	if (dir->next)
-		read_dir(dir->next->name, opt, dir->next, 0);
+	if (dir->sub && read_dir(dir->sub->name, opt, dir->sub, 0) == -1
+													&& dir->sub->next)
+		read_dir(dir->sub->next->name, opt, dir->sub->next, 0);
+	if (dir->next && read_dir(dir->next->name, opt, dir->next, 0) == -1
+													&& dir->next->next)
+		read_dir(dir->next->next->name, opt, dir->next->next, 0);
 }

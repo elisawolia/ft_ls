@@ -16,7 +16,8 @@
 ** creating a structure for storing directory information
 */
 
-t_dir	*new_dir(char *name, time_t time, long long size)
+t_dir	*new_dir(char *name, time_t time, long long size,
+								struct timespec st_mtimespec)
 {
 	t_dir	*dir;
 
@@ -35,6 +36,8 @@ t_dir	*new_dir(char *name, time_t time, long long size)
 	dir->size = size;
 	dir->files = NULL;
 	dir->time = time;
+	dir->sec = (long)st_mtimespec.tv_sec;
+	dir->nsec = (long)st_mtimespec.tv_nsec;
 	dir->sub = NULL;
 	dir->next = NULL;
 	dir->mult = NULL;
@@ -100,7 +103,7 @@ t_dir	*init_dir(DIR *dir, t_opt *opt, char *name, t_dir *di)
 	if (lstat(name, &sb) == -1)
 		lstat_error();
 	direct = (di != NULL) ? di
-	: new_dir(name, sb.st_mtime, (long long)sb.st_size);
+	: new_dir(name, sb.st_mtime, (long long)sb.st_size, sb.st_mtimespec);
 	while ((d = readdir(dir)) != NULL)
 	{
 		if (opt->d)

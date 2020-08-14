@@ -94,11 +94,11 @@ void		print_list_l(t_dir *dir, uint16_t color)
 		ft_putspace((dir->max_link + 1) -
 			(long long int)(count_max(tmp->link)));
 		ft_printf("%ld %s", tmp->link, getpwuid(tmp->uid)->pw_name);
-		ft_putspace((dir->max_uid + 1) -
+		ft_putspace((dir->max_uid + 2) -
 			(long int)ft_strlen(getpwuid(tmp->uid)->pw_name));
-		ft_putspace((dir->max_gid + 1) -
-			(long int)ft_strlen(getgrgid(tmp->gid)->gr_name));
 		ft_printf("%s ", getgrgid(tmp->gid)->gr_name);
+		ft_putspace((dir->max_gid) -
+			(long int)ft_strlen(getgrgid(tmp->gid)->gr_name));
 		ft_putspace((dir->max_size + 1) -
 			(long long int)(count_max(tmp->size)));
 		ft_printf("%d ", tmp->size);

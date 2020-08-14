@@ -22,6 +22,16 @@ double	time_sort_dir(t_dir *a, t_dir *b)
 	return (b->time - a->time);
 }
 
+double	sort_sec_dir(t_dir *a, t_dir *b)
+{
+	return ((double)(b->sec - a->sec));
+}
+
+double	sort_nsec_dir(t_dir *a, t_dir *b)
+{
+	return ((double)(b->nsec - a->nsec));
+}
+
 double	size_sort_dir(t_dir *a, t_dir *b)
 {
 	return ((double)(b->size - a->size));

@@ -12,7 +12,7 @@
 
 #include "ft_ls.h"
 
-void		read_dir(char *dirname, t_opt **opt, t_dir *d, int del_r)
+int			read_dir(char *dirname, t_opt **opt, t_dir *d, int del_r)
 {
 	t_dir	*direct;
 	DIR		*dir;
@@ -20,8 +20,9 @@ void		read_dir(char *dirname, t_opt **opt, t_dir *d, int del_r)
 	dir = opendir(dirname);
 	if (!dir)
 	{
-		perror("diropen");
-		exit(1);
+		ft_printf_fd(1, "\n%s:\n", dirname);
+		ft_printf_fd(2, "ft_ls: %s: Permission denied\n", dirname);
+		return (-1);
 	}
 	direct = init_dir(dir, *opt, dirname, d);
 	closedir(dir);
@@ -30,43 +31,15 @@ void		read_dir(char *dirname, t_opt **opt, t_dir *d, int del_r)
 		free_dir(&direct);
 	if ((*opt)->rec == 1 && del_r == 1)
 		free_dir(&direct);
-}
-
-static void	add_files_help(t_dir **dir_files, struct dirent	*d,
-												int *added)
-{
-	file_add(&((*dir_files)->files), new_file(d, *dir_files, NULL, 0));
-	*added = 1;
-	(*dir_files)->file_added = 1;
+	return (0);
 }
 
 static void	add_files(char *file_name, t_dir **dir_files, t_opt **opt)
 {
-	struct dirent	*d;
-	struct stat		sb;
-	DIR				*dir;
-	int				added;
-
-	d = NULL;
-	added = 0;
-	dir = opendir(".");
-	if (lstat(".", &sb) != -1)
-	{
-		if (*dir_files == NULL)
-			*dir_files = new_dir(".", sb.st_mtime, (long long)sb.st_size);
-		while ((d = readdir(dir)) != NULL)
-		{
-			if (ft_strcmp(file_name, d->d_name) == 0)
-				add_files_help(dir_files, d, &added);
-		}
-		if (added == 0)
-		{
-			(*opt)->err = 1;
-			ls_error(file_name);
-		}
-		sort_files(*opt, *dir_files);
-	}
-	closedir(dir);
+	if (file_name[ft_strlen(file_name) - 1] == '/')
+		treat_as_dir(file_name);
+	else
+		treat_as_file(file_name, dir_files, opt);
 }
 
 static void	read_mult_dirs(char **dirname, int i, int argc, t_opt **opt)

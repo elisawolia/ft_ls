@@ -40,3 +40,13 @@ void	malloc_err(void)
 	perror("malloc");
 	exit(1);
 }
+
+/*
+** needed in multiple files/dirs
+*/
+
+void	err_help(t_opt *opt, char *file_name)
+{
+	opt->err = 1;
+	ls_error(file_name);
+}
